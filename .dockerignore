@@ -5,6 +5,7 @@ HELP.md
 docker-compose.yml
 Dockerfile
 .dockerignore
+*.dockerfile
 
 ### Git and Co ###
 .git*

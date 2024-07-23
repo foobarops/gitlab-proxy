@@ -1,10 +1,14 @@
-Build docker image option 1 (doesn't use the Dockerfile):
-./mvnw spring-boot:build-image -Dspring-boot.build-image.imageName=springio/gs-spring-boot-docker
+Build docker image option 1:
+```bash
+./mvnw spring-boot:build-image -Dspring-boot.build-image.imageName=gitlab-proxy
+```
 
-Build docker image option 2 (may not work due version mismatch):
-./mvnw package
-mkdir -p target/dependency && (cd target/dependency; jar -xf ../*.jar)
-docker build -t example/gitlab-proxy .
+Build docker image option 2 (uses the Dockerfile):
+```bash
+docker buildx build --platform amd64 -t gitlab-proxy .
+```
 
 To start:
-docker run -p 8080:8080 example/gitlab-proxy
+```bash
+docker run -p 8080:8080 --platform amd64 -ti gitlab-proxy
+```
