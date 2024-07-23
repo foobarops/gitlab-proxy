@@ -1,9 +1,4 @@
-Build docker image option 1:
-```bash
-./mvnw spring-boot:build-image -Dspring-boot.build-image.imageName=gitlab-proxy
-```
-
-Build docker image option 2 (uses the Dockerfile):
+Build docker image using the Dockerfile:
 ```bash
 docker buildx build --platform amd64 -t gitlab-proxy .
 ```
