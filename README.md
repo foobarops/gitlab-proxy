@@ -27,3 +27,14 @@ docker run -p 8080:8080 --platform amd64 -ti gitlab-proxy
 ```bash
 curl http://localhost:8080/groups
 ```
+
+# Debug
+## Debug building of the docker image:
+```bash
+docker buildx build --platform amd64 --progress=plain -t gitlab-proxy --no-cache .
+```
+
+## Inspect built container:
+```bash
+docker run -p 8080:8080 --platform amd64 -ti --entrypoint /bin/sh gitlab-proxy
+```
