@@ -1,0 +1,13 @@
+services:
+  gitlab-proxy:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      platforms:
+        - linux/amd64
+    image: gitlab-proxy
+    ports:
+      - "8080:8080"
+    platform: linux/amd64
+    tty: true
+    stdin_open: true
