@@ -1,3 +1,5 @@
+# Build and run the application
+
 ## Build and run using docker-compose:
 ```bash
 docker compose up
@@ -21,3 +23,7 @@ mvn spring-boot:build-image -Dspring-boot.build-image.imageName=gitlab-proxy
 docker run -p 8080:8080 --platform amd64 -ti gitlab-proxy
 ```
 
+# Test the application
+```bash
+curl http://localhost:8080/groups
+```
