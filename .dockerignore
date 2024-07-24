@@ -13,6 +13,9 @@ Dockerfile
 ### Dev Container ###
 .devcontainer/
 
+### VS Code ###
+.vscode/
+
 ### ### further from .gitignore ###
 
 target/
@@ -53,6 +56,3 @@ target/
 build/
 !**/src/main/**/build/
 !**/src/test/**/build/
-
-### VS Code ###
-.vscode/
