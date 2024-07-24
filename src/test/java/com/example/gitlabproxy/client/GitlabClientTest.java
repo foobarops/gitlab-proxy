@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 
+import com.example.gitlabproxy.AbstractTest;
+
 import java.util.List;
 
 import static org.mockito.Mockito.*;
@@ -33,7 +35,8 @@ class GitlabClientTest extends AbstractTest {
     }
 
     @AfterEach
-    void tearDown() {
+    protected void tearDown() {
+        super.tearDown();
         verifyNoMoreInteractions(gitLabApi, mockGroupApi);
     }
 
