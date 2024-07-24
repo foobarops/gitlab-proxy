@@ -1,5 +1,6 @@
 {
     "remote.autoForwardPorts": false,
+    "terminal.integrated.defaultProfile.linux": "zsh",
     "java.compile.nullAnalysis.mode": "automatic",
     "java.configuration.updateBuildConfiguration": "automatic"
 }
