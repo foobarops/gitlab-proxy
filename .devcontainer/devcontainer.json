@@ -24,7 +24,9 @@
 		"vscode": {
 			"extensions": [
 				"mhutchie.git-graph",
-				"shd101wyy.markdown-preview-enhanced"
+				"shd101wyy.markdown-preview-enhanced",
+				"vscjava.vscode-java-pack",
+				"redhat.fabric8-analytics"
 			]
 		}
 	}
