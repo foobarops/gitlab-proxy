@@ -23,7 +23,8 @@
 	"customizations": {
 		"vscode": {
 			"extensions": [
-				"mhutchie.git-graph"
+				"mhutchie.git-graph",
+				"shd101wyy.markdown-preview-enhanced"
 			]
 		}
 	}
