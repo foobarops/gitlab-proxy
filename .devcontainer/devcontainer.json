@@ -9,7 +9,7 @@
 		"ghcr.io/devcontainers/features/java:1": {
 			"version": "none",
 			"installMaven": "true",
-			"installGradle": "false"
+			"installGradle": "true"
 		},
 		"ghcr.io/devcontainers/features/docker-in-docker:2": {
 			"moby": true,
@@ -26,7 +26,8 @@
 				"mhutchie.git-graph",
 				"shd101wyy.markdown-preview-enhanced",
 				"vscjava.vscode-java-pack",
-				"redhat.fabric8-analytics"
+				"redhat.fabric8-analytics",
+				"vscjava.vscode-gradle"
 			]
 		}
 	}
