@@ -18,10 +18,10 @@ Dockerfile
 
 ### ### further from .gitignore ###
 
-target/
-
 ### Gradle ###
 .gradle/
+bin/
+build/
 
 ### ### Common ###
 

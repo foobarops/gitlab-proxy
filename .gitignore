@@ -1,7 +1,7 @@
-target/
-
 ### Gradle ###
 .gradle/
+bin/
+build/
 
 ### ### Common ###
 
