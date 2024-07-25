@@ -16,7 +16,8 @@ repositories {
 
 dependencies {
     api(libs.org.springframework.boot.spring.boot.starter.web)
-    api(libs.org.projectlombok.lombok)
+    compileOnly(libs.org.projectlombok.lombok)
+    annotationProcessor(libs.org.projectlombok.lombok)
     api(libs.org.gitlab4j.gitlab4j.api)
     testImplementation(libs.org.springframework.boot.spring.boot.starter.test)
 }
@@ -24,7 +25,8 @@ dependencies {
 group = "com.example"
 version = "0.0.1-SNAPSHOT"
 description = "gitlab-proxy"
-java.sourceCompatibility = JavaVersion.VERSION_1_8
+java.sourceCompatibility = JavaVersion.VERSION_11
+java.targetCompatibility = JavaVersion.VERSION_11
 
 publishing {
     publications.create<MavenPublication>("maven") {
