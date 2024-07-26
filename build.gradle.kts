@@ -5,6 +5,7 @@
 plugins {
     `java-library`
     `maven-publish`
+    alias(libs.plugins.spring.boot)
 }
 
 repositories {
@@ -26,7 +27,7 @@ group = "com.example"
 version = "0.0.1-SNAPSHOT"
 description = "gitlab-proxy"
 java.sourceCompatibility = JavaVersion.VERSION_11
-java.targetCompatibility = JavaVersion.VERSION_11
+java.targetCompatibility = JavaVersion.VERSION_21
 
 publishing {
     publications.create<MavenPublication>("maven") {

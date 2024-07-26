@@ -2,9 +2,6 @@
     "recommendations": [
         "mhutchie.git-graph",
         "shd101wyy.markdown-preview-enhanced",
-        "redhat.fabric8-analytics",
         "vscjava.vscode-java-pack",
-        "github.copilot",
-        "vscjava.vscode-gradle"
     ]
 }
