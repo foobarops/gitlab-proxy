@@ -20,8 +20,8 @@ Dockerfile
 
 ### Gradle ###
 .gradle/
-bin/
-build/
+/gradle-wd/bin/
+/gradle-wd/build/
 
 ### ### Common ###
 

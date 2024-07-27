@@ -34,6 +34,26 @@ if (bootJarTaskFile.exists()) {
     apply(from = bootJarTaskFile)
 }
 
+// Configure source sets
+sourceSets {
+    main {
+        java {
+            srcDirs("../src/main/java")
+        }
+        resources {
+            srcDirs("../src/main/resources")
+        }
+    }
+    test {
+        java {
+            srcDirs("../src/test/java")
+        }
+        resources {
+            srcDirs("../src/test/resources")
+        }
+    }
+}
+
 publishing {
     publications.create<MavenPublication>("maven") {
         from(components["java"])
