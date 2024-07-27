@@ -29,6 +29,11 @@ description = "gitlab-proxy"
 java.sourceCompatibility = JavaVersion.VERSION_11
 java.targetCompatibility = JavaVersion.VERSION_21
 
+val bootJarTaskFile = file("bootJar.tasks.gradle.kts")
+if (bootJarTaskFile.exists()) {
+    apply(from = bootJarTaskFile)
+}
+
 publishing {
     publications.create<MavenPublication>("maven") {
         from(components["java"])
