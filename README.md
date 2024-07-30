@@ -13,9 +13,9 @@ docker compose up
 docker buildx build --platform amd64 -t gitlab-proxy .
 ```
 
-#### Build docker image with maven:
+#### Build docker image with gradle:
 ```bash
-mvn spring-boot:build-image -Dspring-boot.build-image.imageName=gitlab-proxy
+gradle bootBuildImage --imageName=gitlab-proxy
 ```
 
 ### Run:
