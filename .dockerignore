@@ -25,6 +25,9 @@ Dockerfile
 
 ### ### Common ###
 
+### IDE ###
+/bin/
+
 ### Logs ###
 *.log
 *.log.*

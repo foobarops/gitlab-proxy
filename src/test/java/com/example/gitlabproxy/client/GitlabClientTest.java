@@ -3,6 +3,7 @@ package com.example.gitlabproxy.client;
 import org.gitlab4j.api.GitLabApi;
 import org.gitlab4j.api.GitLabApiException;
 import org.gitlab4j.api.GroupApi;
+import org.gitlab4j.api.Pager;
 import org.gitlab4j.api.models.Group;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -41,29 +42,32 @@ class GitlabClientTest extends AbstractTest {
     }
 
     @Test
-    @DisplayName("Успех")
+    @DisplayName("Success")
     void success() throws GitLabApiException {
         List<Group> groups = List.of(
             new Group().withFullName("test/group1"),
             new Group().withFullName("test/group2")
         );
-        when(mockGroupApi.getGroups()).thenReturn(groups);
+        @SuppressWarnings("unchecked")
+        Pager<Group> mockPager = mock(Pager.class);
+        when(mockGroupApi.getGroups(100)).thenReturn(mockPager);
+        when(mockPager.page(0)).thenReturn(groups);
         softly.assertThat(gitlabClient.getGroups()).isEqualTo(groups);
         verify(gitLabApi).getGroupApi();
-        verify(mockGroupApi).getGroups();
+        verify(mockGroupApi).getGroups(100);
     }
 
     @Test
-    @DisplayName("Ошибка")
+    @DisplayName("Error is propagated")
     void exception() throws GitLabApiException {
-        when(mockGroupApi.getGroups()).thenThrow(new GitLabApiException("test"));
+        when(mockGroupApi.getGroups(100)).thenThrow(new GitLabApiException("test"));
         softly.assertThatThrownBy(() -> gitlabClient.getGroups())
             .isInstanceOf(RuntimeException.class)
             .getCause()
             .isInstanceOf(GitLabApiException.class)
             .message().isEqualTo("test");
         verify(gitLabApi).getGroupApi();
-        verify(mockGroupApi).getGroups();
+        verify(mockGroupApi).getGroups(100);
     }
 
 }

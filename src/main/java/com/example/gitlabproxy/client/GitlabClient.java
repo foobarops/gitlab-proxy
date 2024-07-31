@@ -16,7 +16,7 @@ public class GitlabClient {
 
     public List<Group> getGroups() {
         try {
-            return gitLabApi.getGroupApi().getGroups();
+            return gitLabApi.getGroupApi().getGroups(100).page(0);
         } catch (GitLabApiException e) {
             throw new RuntimeException(e);
         }
