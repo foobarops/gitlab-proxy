@@ -6,6 +6,8 @@ Also further improvements can be added to the project like caching, rate limitin
 
 # Table of Contents
 - [Gitlab Proxy](#gitlab-proxy)
+- [Table of Contents](#table-of-contents)
+- [Simple target architecture:](#simple-target-architecture)
 - [Build and run the application](#build-and-run-the-application)
     - [Build and run using docker-compose](#build-and-run-using-docker-compose)
     - [Build and run using docker](#build-and-run-using-docker)
