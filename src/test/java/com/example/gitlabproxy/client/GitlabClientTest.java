@@ -11,7 +11,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.SpyBean;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 import com.example.gitlabproxy.AbstractTest;
 
@@ -19,13 +19,27 @@ import java.util.List;
 
 import static org.mockito.Mockito.*;
 
+/**
+ * This class contains unit tests for the GitlabClient class.
+ * It tests various scenarios related to retrieving groups from GitLab.
+ * 
+ * The test cases include:
+ * - Success: Verifies that the getGroups method returns the expected groups.
+ * - Error is propagated: Verifies that an exception thrown by the GitLab API is propagated correctly.
+ * - Cache works: Verifies that the caching mechanism of the GitlabClient works as expected.
+ * 
+ * The test methods in this class use Mockito to mock the GitLab API and its dependencies.
+ * 
+ * @see com.example.gitlabproxy.client.GitlabClient
+ */
 @SpringBootTest
 class GitlabClientTest extends AbstractTest {
 
-    @SpyBean
+    @MockBean
     private GitLabApi gitLabApi;
 
-    private final GroupApi mockGroupApi = mock(GroupApi.class);
+    @MockBean
+    private GroupApi mockGroupApi;
 
     @Autowired
     private GitlabClient gitlabClient;
@@ -33,6 +47,12 @@ class GitlabClientTest extends AbstractTest {
     @BeforeEach
     void setUp() {
         when(gitLabApi.getGroupApi()).thenReturn(mockGroupApi);
+    }
+
+    
+    @BeforeEach
+    void evictCache() {
+        gitlabClient.evictCache();
     }
 
     @AfterEach
@@ -70,4 +90,41 @@ class GitlabClientTest extends AbstractTest {
         verify(mockGroupApi).getGroups(100);
     }
 
+    /**
+     * Test case to verify that the cache works correctly.
+     * 
+     * This test method performs the following steps:
+     * 1. Creates a list of groups.
+     * 2. Sets up the necessary mock objects for the GitLab API.
+     * 3. Calls the `getGroups` method of the `gitlabClient` object twice.
+     * 4. Verifies that the results of both calls are equal to the initial list of groups.
+     * 5. Verifies that the `getGroupApi` method of the `gitLabApi` object is called only once.
+     * 6. Verifies that the `getGroups` method of the `mockGroupApi` object is called only once with the correct parameter.
+     * 
+     * @see com.example.gitlabproxy.client.GitlabClient#getGroups()
+     */
+    @Test
+    @DisplayName("Cache works")
+    void cacheWorks() throws GitLabApiException {
+        List<Group> groups = List.of(
+            new Group().withFullName("test/group1"),
+            new Group().withFullName("test/group2")
+        );
+
+        @SuppressWarnings("unchecked")
+        Pager<Group> mockPager = mock(Pager.class);
+        when(mockGroupApi.getGroups(100)).thenReturn(mockPager);
+        when(mockPager.page(0)).thenReturn(groups);
+
+        // First call
+        List<Group> firstCallResult = gitlabClient.getGroups();
+        softly.assertThat(firstCallResult).isEqualTo(groups);
+
+        // Second call
+        List<Group> secondCallResult = gitlabClient.getGroups();
+        softly.assertThat(secondCallResult).isEqualTo(groups);
+
+        verify(gitLabApi, times(1)).getGroupApi();
+        verify(mockGroupApi, times(1)).getGroups(100);
+    }
 }

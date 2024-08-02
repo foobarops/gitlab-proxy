@@ -1,6 +1,10 @@
 
 # Gitlab Proxy
-This project is a simple proxy for Gitlab API. It is a Spring Boot application that forwards requests to Gitlab API and returns the response to the client. The main goal of this project  is to be a starting point for other projects that need to use Gitlab API. The proxy can be used to hide the complexity of Gitlab API, to add features like caching, rate limiting, etc. See the section [Further improvements](#further-improvements) for more details.
+This project is a simple proxy for Gitlab API. It is a Spring Boot application that forwards requests to Gitlab API and returns the response to the client.
+The main goal of this project is to provide quick responses to the client by caching the responses from Gitlab API.
+The proxy can also be used to add more features like rate limiting, security, monitoring, etc.
+It is a also a simple project that can be used as a starting point to build more complex projects.
+See the section [Further improvements](#further-improvements) for more details.
 
 # Table of Contents
 - [Gitlab Proxy](#gitlab-proxy)
@@ -18,7 +22,8 @@ This project is a simple proxy for Gitlab API. It is a Spring Boot application t
     - [Debug building of the docker image](#debug-building-of-the-docker-image)
     - [Inspect built container](#inspect-built-container)
 - [Further improvements](#further-improvements)
-- [Add more features like caching, rate limiting, etc](#add-more-features-like-caching-rate-limiting-etc)
+- [Configure cache](#configure-cache)
+- [Add more features like rate limiting, etc](#add-more-features-like-rate-limiting-etc)
 - [Add more endpoints to the proxy like /projects, /users, etc](#add-more-endpoints-to-the-proxy-like-projects-users-etc)
 - [Add more tests like integration tests, contract tests, etc](#add-more-tests-like-integration-tests-contract-tests-etc)
 - [Add more security like authentication, authorization, etc](#add-more-security-like-authentication-authorization-etc)
@@ -78,9 +83,11 @@ docker buildx build --platform amd64 --progress=plain -t gitlab-proxy --no-cache
 docker run -p 8080:8080 --platform amd64 -ti --entrypoint /bin/sh gitlab-proxy
 ```
 # Further improvements
-## Add more features like caching, rate limiting, etc
-Cache the responses from Gitlab API. This will reduce the number of requests to Gitlab API and improve the performance of the proxy. However, it will increase the complexity of the proxy because it will need to manage the cache, evict the cache, etc.
+## Configure cache
+Caching can be done using a tool like Caffeine, Ehcache, Redis, etc. Alternatively, the cache can be implemented using a tool like Spring Cache, etc.
+The cache can be configured using annotations like @Cacheable, @CachePut, @CacheEvict, etc.
 A force flag can be added to endpoints to force the proxy to fetch the data from Gitlab API and update the cache.
+## Add more features like rate limiting, etc
 Rate limiting can be used to prevent abuse of the proxy. For example, the proxy can limit the number of requests per second, per minute, per user, per IP, etc. It can be done using a tool like RateLimiter, etc.
 
 ## Add more endpoints to the proxy like /projects, /users, etc
