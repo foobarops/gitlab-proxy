@@ -85,6 +85,9 @@ docker run -p 8080:8080 --platform amd64 -ti --entrypoint /bin/sh gitlab-proxy
 # Further improvements
 ## Configure cache
 Caching can be done using a tool like Caffeine, Ehcache, Redis, etc. Alternatively, the cache can be implemented using a tool like Spring Cache, etc.
+Dirrences between Spring Cache and Ehcache:
+- Spring Cache is a simple abstraction for adding caching to Spring applications. It provides a consistent way to cache the results of method calls in a Spring application. It supports multiple caching providers like Ehcache, Redis, etc.
+Spring Cache default implementation is a simple in-memory cache. It can be used to cache the results of method calls in a Spring application.
 The cache can be configured using annotations like @Cacheable, @CachePut, @CacheEvict, etc.
 A force flag can be added to endpoints to force the proxy to fetch the data from Gitlab API and update the cache.
 ## Add more features like rate limiting, etc

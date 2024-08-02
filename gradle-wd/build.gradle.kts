@@ -20,6 +20,9 @@ dependencies {
     compileOnly(libs.org.projectlombok.lombok)
     annotationProcessor(libs.org.projectlombok.lombok)
     api(libs.org.gitlab4j.gitlab4j.api)
+    api(libs.org.springframework.boot.spring.boot.starter.cache)
+    api(libs.org.ehcache.ehcache)
+    api(libs.javax.cache.cache.api)
     testImplementation(libs.org.springframework.boot.spring.boot.starter.test)
 }
 

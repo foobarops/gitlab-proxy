@@ -7,4 +7,5 @@
     "java.compile.nullAnalysis.mode": "automatic",
     "java.configuration.updateBuildConfiguration": "automatic",
     "java.debug.settings.hotCodeReplace": "manual",
+    "java.debug.settings.showQualifiedNames": true,
 }
