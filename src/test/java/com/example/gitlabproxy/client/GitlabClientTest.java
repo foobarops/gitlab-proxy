@@ -56,7 +56,7 @@ class GitlabClientTest extends AbstractTest {
     @SuppressWarnings("null")
     @BeforeEach
     void evictCache() {
-        cacheManager.getCache("groupsCache").clear();
+        cacheManager.getCacheNames().forEach(cacheName -> cacheManager.getCache(cacheName).clear());
     }
 
     @AfterEach

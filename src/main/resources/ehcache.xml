@@ -6,8 +6,8 @@
     <jsr107:defaults enable-statistics="true"/>
   </service>
   <cache alias="groupsCache">
-    <!-- <key-type>java.lang.Long</key-type>
-    <value-type>java.lang.Long</value-type> -->
+    <key-type>org.springframework.cache.interceptor.SimpleKey</key-type>
+    <value-type>java.util.List</value-type>
     <expiry>
       <ttl unit="seconds">10000</ttl>
     </expiry>
