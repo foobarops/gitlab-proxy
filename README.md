@@ -1,8 +1,6 @@
 
 # Gitlab Proxy
-This project is a simple proxy for Gitlab API. It is a Spring Boot application that forwards requests to Gitlab API and returns the response to the client. The main goal of this project is to demonstrate how to use Spring Boot, Docker, and Docker Compose. 
-And also be a starting point for other projects that need to use Gitlab API.
-Also further improvements can be added to the project like caching, rate limiting, etc. See the section [Further improvements](#further-improvements) for more details.
+This project is a simple proxy for Gitlab API. It is a Spring Boot application that forwards requests to Gitlab API and returns the response to the client. The main goal of this project  is to be a starting point for other projects that need to use Gitlab API. The proxy can be used to hide the complexity of Gitlab API, to add features like caching, rate limiting, etc. See the section [Further improvements](#further-improvements) for more details.
 
 # Table of Contents
 - [Gitlab Proxy](#gitlab-proxy)
@@ -33,6 +31,7 @@ Also further improvements can be added to the project like caching, rate limitin
 - [Add more environments like dev, test, prod, etc](#add-more-environments-like-dev-test-prod-etc)
 - [Add more examples like how to use the proxy in a real project](#add-more-examples-like-how-to-use-the-proxy-in-a-real-project)
 - [Add more comments in the code](#add-more-comments-in-the-code)
+- [Add built-in support for OpenAPI, Swagger, etc](#add-built-in-support-for-openapi-swagger-etc)
 
 # Example of a target architecture:
 ![Diagram](docs/diagram/Diagram.drawio.png)
@@ -127,3 +126,5 @@ For example, how to use the proxy in a frontend application, how to use the prox
 ## Add more comments in the code
 Is always good to have comments in the code to explain why the code is there, what the code is doing, etc.
 
+## Add built-in support for OpenAPI, Swagger, etc
+It can be done using a tool like Springdoc, Swagger, etc. It is important to have a documentation of the API to make it easier to use the API.
