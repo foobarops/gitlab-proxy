@@ -49,15 +49,13 @@ class GitlabClientTest extends AbstractTest {
         when(gitLabApi.getGroupApi()).thenReturn(mockGroupApi);
     }
 
-    
     @BeforeEach
     void evictCache() {
         gitlabClient.evictCache();
     }
 
     @AfterEach
-    protected void tearDown() {
-        super.tearDown();
+    private void afterEach() {
         verifyNoMoreInteractions(gitLabApi, mockGroupApi);
     }
 

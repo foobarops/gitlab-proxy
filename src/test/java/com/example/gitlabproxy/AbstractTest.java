@@ -8,7 +8,7 @@ public class AbstractTest {
     protected final SoftAssertions softly = new SoftAssertions();
 
     @AfterEach
-    protected void tearDown() {
+    public void assertAll() {
         softly.assertAll();
     }
 

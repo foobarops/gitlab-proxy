@@ -25,8 +25,7 @@ class GroupsServiceTest extends AbstractTest {
     private GitlabClient gitlabClient;
 
     @AfterEach
-    protected void tearDown() {
-        super.tearDown();
+    private void afterEach() {
         verifyNoMoreInteractions(gitlabClient);
     }
 
