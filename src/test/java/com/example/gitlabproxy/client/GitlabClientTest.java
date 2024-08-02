@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.cache.CacheManager;
 
 import com.example.gitlabproxy.AbstractTest;
 
@@ -44,14 +45,18 @@ class GitlabClientTest extends AbstractTest {
     @Autowired
     private GitlabClient gitlabClient;
 
+    @Autowired
+    private CacheManager cacheManager;
+
     @BeforeEach
     void setUp() {
         when(gitLabApi.getGroupApi()).thenReturn(mockGroupApi);
     }
 
+    @SuppressWarnings("null")
     @BeforeEach
     void evictCache() {
-        gitlabClient.evictCache();
+        cacheManager.getCache("groupsCache").clear();
     }
 
     @AfterEach
