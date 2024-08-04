@@ -79,4 +79,34 @@ class GroupsControllerTest {
         verify(groupsService).getGroups();
     }
 
+    @Test
+    @DisplayName("GET: Filtered result")
+    void getGroupsFiltered() throws Exception {
+        when(groupsService.getGroupsFiltered("group2")).thenReturn(
+            GroupsWrapper.builder().groups(List.of(
+                GroupsWrapper.Group.builder().fullPath("test/group2").build())).build()
+        );
+        this.mockMvc
+            .perform(get("/groups").param("filter", "group2"))
+            .andExpect(status().isOk())
+            .andExpect(content().json(
+                "{\"groups\": [{\"fullPath\":\"test/group2\"}]}"));
+        verify(groupsService).getGroupsFiltered("group2");
+    }
+
+    @Test
+    @DisplayName("GET: Filtered result with refresh")
+    void getGroupsFilteredRefreshed() throws Exception {
+        when(groupsService.getGroupsFiltered("group2", true)).thenReturn(
+            GroupsWrapper.builder().groups(List.of(
+                GroupsWrapper.Group.builder().fullPath("test/group2").build())).build()
+        );
+        this.mockMvc
+            .perform(get("/groups").param("filter", "group2").param("refresh", "true"))
+            .andExpect(status().isOk())
+            .andExpect(content().json(
+                "{\"groups\": [{\"fullPath\":\"test/group2\"}]}"));
+        verify(groupsService).getGroupsFiltered("group2", true);
+    }
+
 }
