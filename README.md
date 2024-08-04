@@ -1,8 +1,13 @@
 
 # Gitlab Proxy
 This project is a simple proxy for Gitlab API. It is a Spring Boot application that forwards requests to Gitlab API and returns the response to the client.
+
 The main goal of this project is to provide quick responses to the client by caching the responses from Gitlab API. Refreshing the cache can be done by using a `refresh` flag in the request.
+
 Currently, the proxy has only one endpoint `/groups` that returns the list of groups from Gitlab API.
+
+Docker images can be built using the Dockerfile or using gradle. The proxy can be run using docker-compose or using docker.
+
 The proxy can also be used to add more features like rate limiting, security, monitoring, etc.
 It is also a simple project that can be used as a starting point to build more complex projects.
 See the section [Further improvements](#further-improvements) for more details.
