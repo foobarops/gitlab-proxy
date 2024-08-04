@@ -37,6 +37,12 @@ See the section [Further improvements](#further-improvements) for more details.
 - [Add more examples like how to use the proxy in a real project](#add-more-examples-like-how-to-use-the-proxy-in-a-real-project)
 - [Add more comments in the code](#add-more-comments-in-the-code)
 - [Add built-in support for OpenAPI, Swagger, etc](#add-built-in-support-for-openapi-swagger-etc)
+- [Further features](#further-features)
+    - [Further features on endpoint /groups](#further-features-on-endpoint-groups)
+        - [Add pagination](#add-pagination)
+        - [Add sorting](#add-sorting)
+        - [Add filtering](#add-filtering)
+        - [Add refresh (cache) flag](#add-refresh-cache-flag)
 
 # Example of a target architecture:
 ![Diagram](docs/diagram/Diagram.drawio.png)
@@ -138,3 +144,14 @@ Is always good to have comments in the code to explain why the code is there, wh
 
 ## Add built-in support for OpenAPI, Swagger, etc
 It can be done using a tool like Springdoc, Swagger, etc. It is important to have a documentation of the API to make it easier to use the API.
+
+# Further features
+## Further features on endpoint /groups
+### Add pagination
+Pagination can be used to limit the number of groups returned by the proxy. For example, the proxy can return the first 10 groups, the next 10 groups, etc. It can be done using a tool like Pageable, etc.
+### Add sorting
+Sorting can be used to sort the groups returned by the proxy. For example, the proxy can sort the groups by name, by id, etc. It can be done using a tool like Sort, etc.
+### Add filtering
+Filtering can be used to filter the groups returned by the proxy. For example, the proxy can return only the groups that contain a specific word in the name, etc. It can be done using a tool like Specification, etc.
+### Add refresh (cache) flag
+A refresh flag can be added to the endpoint to force the proxy to fetch the data from Gitlab API and update the cache. For example, the proxy can return the groups from the cache if the refresh flag is not set, otherwise, the proxy can fetch the groups from Gitlab API and update the cache.
