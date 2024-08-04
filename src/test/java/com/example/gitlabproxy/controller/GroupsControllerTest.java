@@ -20,7 +20,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@DisplayName("Контроллер групп")
+@DisplayName("GroupsController tests")
 class GroupsControllerTest {
 
     @Autowired
@@ -35,7 +35,7 @@ class GroupsControllerTest {
     }
 
     @Test
-    @DisplayName("GET: Результат из 2-х элементов")
+    @DisplayName("GET: Result of 2 elements")
     void getGroups() throws Exception {
         when(groupsService.getGroups()).thenReturn(
             GroupsWrapper.builder().groups(List.of(
@@ -51,7 +51,23 @@ class GroupsControllerTest {
     }
 
     @Test
-    @DisplayName("GET: Пустой результат")
+    @DisplayName("GET: Result with refresh")
+    void getGroupsRefreshed() throws Exception {
+        when(groupsService.getGroups(true)).thenReturn(
+            GroupsWrapper.builder().groups(List.of(
+                GroupsWrapper.Group.builder().fullPath("test/group1").build(),
+                GroupsWrapper.Group.builder().fullPath("test/group2").build())).build()
+        );
+        this.mockMvc
+            .perform(get("/groups").param("refresh", "true"))
+            .andExpect(status().isOk())
+            .andExpect(content().json(
+                "{\"groups\": [{\"fullPath\":\"test/group1\"}, {\"fullPath\":\"test/group2\"}]}"));
+        verify(groupsService).getGroups(true);
+    }
+
+    @Test
+    @DisplayName("GET: Empty result")
     void getGroupsEmptyResult() throws Exception {
         when(groupsService.getGroups()).thenReturn(
             GroupsWrapper.builder().groups(List.of()).build()

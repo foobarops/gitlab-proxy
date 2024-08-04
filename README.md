@@ -1,9 +1,10 @@
 
 # Gitlab Proxy
 This project is a simple proxy for Gitlab API. It is a Spring Boot application that forwards requests to Gitlab API and returns the response to the client.
-The main goal of this project is to provide quick responses to the client by caching the responses from Gitlab API.
+The main goal of this project is to provide quick responses to the client by caching the responses from Gitlab API. Refreshing the cache can be done by using a `refresh` flag in the request.
+Currently, the proxy has only one endpoint `/groups` that returns the list of groups from Gitlab API.
 The proxy can also be used to add more features like rate limiting, security, monitoring, etc.
-It is a also a simple project that can be used as a starting point to build more complex projects.
+It is also a simple project that can be used as a starting point to build more complex projects.
 See the section [Further improvements](#further-improvements) for more details.
 
 # Table of Contents
@@ -22,21 +23,21 @@ See the section [Further improvements](#further-improvements) for more details.
     - [Debug building of the docker image](#debug-building-of-the-docker-image)
     - [Inspect built container](#inspect-built-container)
 - [Further improvements](#further-improvements)
-- [Configure cache](#configure-cache)
-- [Add more features like rate limiting, etc](#add-more-features-like-rate-limiting-etc)
-- [Add more endpoints to the proxy like /projects, /users, etc](#add-more-endpoints-to-the-proxy-like-projects-users-etc)
-- [Add more tests like integration tests, contract tests, etc](#add-more-tests-like-integration-tests-contract-tests-etc)
-- [Add more security like authentication, authorization, etc](#add-more-security-like-authentication-authorization-etc)
-- [Add more monitoring like metrics, alerts, etc](#add-more-monitoring-like-metrics-alerts-etc)
-- [Add more CI/CD like pipelines, deployments, etc](#add-more-cicd-like-pipelines-deployments-etc)
-- [Add more logging like structured logs, log aggregation, etc](#add-more-logging-like-structured-logs-log-aggregation-etc)
-- [Add more error handling like retries, circuit breakers, etc](#add-more-error-handling-like-retries-circuit-breakers-etc)
-- [Add more performance improvements like async, batching, etc](#add-more-performance-improvements-like-async-batching-etc)
-- [Add more configurations like timeouts, retries, etc](#add-more-configurations-like-timeouts-retries-etc)
-- [Add more environments like dev, test, prod, etc](#add-more-environments-like-dev-test-prod-etc)
-- [Add more examples like how to use the proxy in a real project](#add-more-examples-like-how-to-use-the-proxy-in-a-real-project)
-- [Add more comments in the code](#add-more-comments-in-the-code)
-- [Add built-in support for OpenAPI, Swagger, etc](#add-built-in-support-for-openapi-swagger-etc)
+    - [Distributed cache scenario](#distributed-cache-scenario)
+    - [Add more features like rate limiting, etc](#add-more-features-like-rate-limiting-etc)
+    - [Add more endpoints to the proxy like /projects, /users, etc](#add-more-endpoints-to-the-proxy-like-projects-users-etc)
+    - [Add more tests like integration tests, contract tests, etc](#add-more-tests-like-integration-tests-contract-tests-etc)
+    - [Add more security like authentication, authorization, etc](#add-more-security-like-authentication-authorization-etc)
+    - [Add more monitoring like metrics, alerts, etc](#add-more-monitoring-like-metrics-alerts-etc)
+    - [Add more CI/CD like pipelines, deployments, etc](#add-more-cicd-like-pipelines-deployments-etc)
+    - [Add more logging like structured logs, log aggregation, etc](#add-more-logging-like-structured-logs-log-aggregation-etc)
+    - [Add more error handling like retries, circuit breakers, etc](#add-more-error-handling-like-retries-circuit-breakers-etc)
+    - [Add more performance improvements like async, batching, etc](#add-more-performance-improvements-like-async-batching-etc)
+    - [Add more configurations like timeouts, retries, etc](#add-more-configurations-like-timeouts-retries-etc)
+    - [Add more environments like dev, test, prod, etc](#add-more-environments-like-dev-test-prod-etc)
+    - [Add more examples like how to use the proxy in a real project](#add-more-examples-like-how-to-use-the-proxy-in-a-real-project)
+    - [Add more comments in the code](#add-more-comments-in-the-code)
+    - [Add built-in support for OpenAPI, Swagger, etc](#add-built-in-support-for-openapi-swagger-etc)
 - [Further features](#further-features)
     - [Further features on endpoint /groups](#further-features-on-endpoint-groups)
         - [Add pagination](#add-pagination)
@@ -46,7 +47,7 @@ See the section [Further improvements](#further-improvements) for more details.
 
 # Example of a target architecture:
 ![Diagram](docs/diagram/Diagram.drawio.png)
-[Edit](https://viewer.diagrams.net/?tags=%7B%7D&lightbox=1&highlight=0000ff&edit=_blank&layers=1&nav=1#R%3Cmxfile%3E%3Cdiagram%20id%3D%22sIVUU5Nqvf2JdoVW1s2s%22%20name%3D%22Page-1%22%3E7VtZc9s2EP41mnEe5OGh89GSbKdp0mbiTh33JQOREEUbIlgQsqT%2B%2Bi4I8AJJSbYZ2bHkh4RYgItjd789QLXs8WJ9zVA4%2F0JdTFqW4a5b9qRlWX3Thn8FYaMI%2Fb4keMx3JcnMCDf%2Bf1gRDUVd%2Bi6OCgM5pYT7YZHo0CDADi%2FQEGN0VRw2o6Q4a4g8XCLcOIiUqbe%2By%2BeSOrD6Gf0j9r15MrPZG8qeBUoGq51Ec%2BTSVY5kX7bsMaOUy6fFeoyJOLvkXOR7VzW96cIYDvg%2BL3z6Oh2yf25%2FGDz8c3Tr09mXz5%2FapiXZPCKyVDtWq%2BWb5AgYXQYuFlyMlj1azX2Ob0LkiN4VyBxoc74g0DLh0UXRPB4rGh5BUaTe8xhyfVjqmBLKgBbQADiMZj4hGkmtCDOO17V7NdMTBM3DdIE528AQ9UKqPkrrhl3ZXGUitPtqyDwvPksNREptvJR1drLwoA63%2BqDp6P63m%2BCuQ36f0NvrxY%2B%2F7%2FvTdqd0zteXf7WsHoGZR1MGTx6P937lwXmDcpe77KsII%2BbE6%2B%2BP1q3%2BpCQq7ILyqiZlfE49GiBymVFHRWFmYz5TGiqp3WPON8oS0ZLTooBBAmzzXb0fN%2B5E4xxOTrUn63zvZKNaNTIEe0bMw3zL2SUYIna3j%2FTbxrkxHFoFDUgEyzBB3H8sWneVtBX3r9SH5aasTauoWGZHU5iILpmD1Vt5a9QYWZ0iI8swiozkqWxhlAyks1mEC2NiBU2P5fk6mxhRHhw6xhg5c4ymoE0V2ispMxqvcCZBAqj%2FLgXKjT5i8oi576CMlLwKe72uU3xFgT1Ixi%2Be7Kx5lssIswAtcPOcP9SyfAlO11pjCXdrzazT12zBNkooaxoVKNvTVL0xkE1d7WERce3z77lniYdd1crQUDQSMKxD0WeDqMSdPUB0N9p29kTbp0HpBWNokxsQChiLfgps2Q3HNA3YimXvtpXuIU3F7J1MZZcF7DYVo2lTeZlMy0EmhNccQ2x9UXarcZx5tSTkK2QqZx%2FKA84hp%2BLID6LUXUYhCgo6k%2FgqB06Ztx0Zx1%2BIDXvTMzgc2IdhWgP5YHyQXk3zb%2Bucf5MTpH7vlY3W1oO9KgdnHtRqBxXQJk8vZLhSNCJkaCuykExA2QKR%2BICMuO8RMR%2FB%2Fw4SKXXlkJXam%2BjsGNK4DAKWjlkbROb4gVd%2Bk7JwjgLFUkGBMCq85m1EfC%2BQPRFYGc91%2BSDiQM1lhOtcD2fAbgYzJHOpbFGII87zixOtKHOLq0vZwYamDz5wFGwjAKs2cu%2BXEddZFMdxRh9wW8m%2BvDwXO5SBldNAX98UOQ9erLy6iVjdrrSN%2FIM0E6PamoyCLUnxzNDCJxs5FASPFsIUlPg%2FYT5iwoih7wsNqN4v2S2gJ5KmlHKNYhAXPIfng5BX2u5OYKjlZMTm21aTarqjT3OD2aPv4Bqg2JoxxGZREzALsRVBQ8p4d4lC6e%2FEAVUV8DoSoALRO7lQHQvfdWOXWYVSRRxrAqiSLDQBKqMMVL0KnLJ%2FGk4NTzh1wqmjw6kxcGGUEMxOUFWXCFlvDKpsswKqQB8gRfiGZwxH89dIlIQ%2BXilzmWTFIdmh3jIt1U4k3oJTiv%2B2ZE39t1OmNc5N%2BCtoQ9tsqEyrp9sdTX32LtNqjNKLhR1l2vpqx54L7nc1zZYcD14Dfroj35YLal5hf9fx1gKDd%2Bj9twQ8zwsMXtnnj4m4bjw2%2F9oZakDy2v7VGryG%2F0wKjVlx8S7XU11o3Mvn2lt8bq34dlccGy8kVruZrlbRsmzt%2BrLGnTXlTbolbxLfghtbrr3P%2FoDOWIsN7i9wVC4LvtG6da02aELeWz22BVJWMY5KxPxSddFv%2BAbPvO3u9TRGeoX0sLfdlZ%2FCnEqrv2DQcipZvLBkccWADQ7c91yweNGnZFo81TlcOFX9wV5VueKUkL1HbHtvCdk37PrRscGHno%2B9PoCcwpxfDwqOOMx5SjBzEYY74phjgR1bS7h65Q%2FgD4s6e3yTB1HohfjFRnaoOTkUT0i%2FBYkhQBEGLXGl4eZazpI9pr9JyC5Gsi%2FI7vJ9W%2B9FSrn7jouS%2BkyzLLodnwJ2m8np9S%2FY0wD3qTl9p6sXB%2FbL6ZvK181yMel4VaquQnQYnep1h%2BfdZrSqVCna88KtMa2q%2BM3DKb96l0HVe8uvrn1O0PTYIp2e5s8q8qtBM5EONLNfa0q8yX7yal%2F%2BDw%3D%3D%3C%2Fdiagram%3E%3C%2Fmxfile%3E)
+[Edit](https://viewer.diagrams.net/?tags=%7B%7D&lightbox=1&highlight=0000ff&edit=_blank&layers=1&nav=1#R%3Cmxfile%3E%3Cdiagram%20id%3D%22sIVUU5Nqvf2JdoVW1s2s%22%20name%3D%22Page-1%22%3E7VxZc6M4EP41rso8OCXAYPvRR5KZ2Znd1GZrk%2BzLlAwyVgYjVsjX%2FvqVkMCcNomJnUychwS1RCOpu78%2BEGkZo%2Fn6hsJg9p04yGvpwFm3jHFL17u6xn8LwkYSLNESBJdiR5K0LeEO%2F4cUESjqAjsozAxkhHgMB1miTXwf2SxDg5SSVXbYlHjZpwbQRQXCnQ29IvUeO2wmqT29u6V%2FRtidxU%2FWrL7smcN4sFpJOIMOWaVIxlXLGFFCmLyar0fIE3sX74u877qiN5kYRT6rc8PX20mf%2FnP%2FA7Dgj%2BE9JtPv3762NSWNJfQWasVqtmwTbwElC99BggtoGcPVDDN0F0Bb9K64zDltxuYeb2n80oHhLBorGq4Hw1Dd51LoYD7VEfEI5TSf%2BJzDcIo9L0cqLkytdYkoQ%2BsUSS30BpE5YnTDh6jeRH2U1vVN2VxtRWh01ZBZWnymGgiV2rgJ6%2B3O8gu1ueUbTYZPX%2B78x47325jc38x%2F%2FP3UnbQ7hX2%2BufqrpVsef%2FJwQvmVy6K1X7t8v7lyF7uM6xBBakfz7w7Xre64ICrkcOVVTULZjLjEh97VljrMCnM75hshgZLaE2JsoywRLhjJCpgLhW4e1P1R41E0LnUzbo%2FX6d7xRrUqxcogdRHbsXeaIQeK1dWRfhtcgn5fz2iArgRLkQcZXmatu0zaivstwXy6CWtNzyqW1skpTEgW1EbqrrQ15hjpnSwjHYAsI7krOxjFA8l0GqLMmEhBk22ppbPjjjYwHxhs3zmzEf2CXeAu292T6Ncas4eURvHmY6prq1yisUlrmrzLzKjlHp3MoFWpkpVqrBTyLo0FRdUux98KTa6tpgeBUjzNNPp3wAjaMwQnXJwl8CQpUxKp4BSqXbD%2BXQg3NvyMvCVi2IZbUnwr34ebKmRTFL4Gyfjgh100z3IRIurDOWqe86dKloc44ga8aKebAzsDFNyoBkrcqAVeSWGTWOokkBRfP26BpgYiZd3ki73kfswx6rrTTk13%2BjxfOaAUblIDAuGnwgP90s6VNha0NhFxGvttxTymqWjW2VT2WcB%2BUwFNm8phMi1mETx%2FYognT4OiW40SieuF593yVPTiU3HAJU%2BaGcR%2BmLjLMIB%2BRmdiX2XzXWZtWyZqA7Fgd3LBN4evA2h6T16AT9Kr5fzbOuXf5AMSv3diozXy0XyZg9OOarW9EmiTuxdQVCoaETK0FVlIxid0Dr1og0DUt4QUQ%2F7XhqJmUjpkpdYmOjtAGhfwuKUj2uYis7HvFu8kNJhBX7FUUCCMCq1ZG3rY9WVPyK2MpbowF7GvngWCdaqHUc5uyp8QP0uVA4Q4okJO9kErQp3s7BJ2fEGTn5hzFGxDDlZt6DwtQpZnkR3HKPmJ2kr2xek5yCaUWznx8%2FObQPunGylv3kR0UVAQtpG%2BkGYCyq0JZGxJimcK59jbyKFc8HAuTEGJ%2FytiQyqMmPd9Jz7J90t2c94TSlNKuIYRiAue%2FctewEptdy8wVHICkfm21UNzupN%2FzB2iS2yjCqDYmTFEZlERMAuxZUFDynh%2FDUrp79jmqirgdShAhUfv3kB1zLHjRC6zDKWyONYEUMVlhhioQBGorBKcMl4Np%2FpnnDrj1IfDqRHnQonnIXqGqqpESH9jUGVoJVDF9YGnCH%2BiKUXh7BSJktDHa2Uu421xSHaouzRdtWOJt%2FguRT87sqbu26nDg0tN07SMNrS1hurw%2BXS7k1Of2nX4HKPkzdGeOnx1taPmhLtmTrMlx9cs8pcK9fmOfFcumPMK9V3HWwsMfkHvvyPgeVlgcGKfP%2FLE%2B%2BSP5l87%2FRyQnNq%2FmgUAid5sgx2vsi9%2B553RxAHDcxQWK0FvtFRZKb%2FabwSf4Tv1rOuMa1UHek4z%2F1Kn98I32JaVY5Qvih33DXbp69VzNe0d%2BqlzlnpglnpNORvkO%2BcctQJccy60czwPuuMQyDkGP8fg7y8GF2eFGoIPB03hQh6ieV0EyZz6knOIz%2FY2dXLGqqgqnAxizoHQ%2BwOLDxwIPSfcGQTBnkjno8Q1Rg52rOKx9%2BOiTo2DWjxOHYjvNLabmpJDdofypfEIAhSh1xJ1bifVshd0maB81QHhpO%2BQYvmu1HNvvr%2FnfJjZTNafP7eehMDPzfo7Zr58UC%2Frbyqj14rlpg%2BjUrVrSMfRKcvsX5rNaFWhllTzLUxjWlVyEP6cgf2SQdWvloHdYObByUeLdKycPysp4fReKdIp%2FVRKP%2BPHGT%2FeJX6MMd8LPFkwbp5c1d5jPadYwin5rq%2BALSUIVF3PyX%2Bt2SvijfZaqVUp4MQ141N9nNl90ceZlmmlQ2Xxoa5h7ImXo9YtophvnNCUo3%2B4WQ34zX8Hwpvb%2Fwggo9vtv1Uwrv4H%3C%2Fdiagram%3E%3C%2Fmxfile%3E)
 
 # Build and run the application
 
@@ -89,13 +90,10 @@ docker buildx build --platform amd64 --progress=plain -t gitlab-proxy --no-cache
 docker run -p 8080:8080 --platform amd64 -ti --entrypoint /bin/sh gitlab-proxy
 ```
 # Further improvements
-## Configure cache
-Caching can be done using a tool like Caffeine, Ehcache, Redis, etc. Alternatively, the cache can be implemented using a tool like Spring Cache, etc.
-Dirrences between Spring Cache and Ehcache:
-- Spring Cache is a simple abstraction for adding caching to Spring applications. It provides a consistent way to cache the results of method calls in a Spring application. It supports multiple caching providers like Ehcache, Redis, etc.
-Spring Cache default implementation is a simple in-memory cache. It can be used to cache the results of method calls in a Spring application.
-The cache can be configured using annotations like @Cacheable, @CachePut, @CacheEvict, etc.
-A force flag can be added to endpoints to force the proxy to fetch the data from Gitlab API and update the cache.
+## Distributed cache scenario
+The proxy can be used in a distributed cache scenario. For example, the proxy can be used to cache the responses from Gitlab API in a Redis cluster. It can be done using a tool like Redisson, etc.
+Alternatively distributed synchronization can be achieved using Terracotta, which provides clustering capabilities for Ehcache.
+
 ## Add more features like rate limiting, etc
 Rate limiting can be used to prevent abuse of the proxy. For example, the proxy can limit the number of requests per second, per minute, per user, per IP, etc. It can be done using a tool like RateLimiter, etc.
 
@@ -153,5 +151,3 @@ Pagination can be used to limit the number of groups returned by the proxy. For 
 Sorting can be used to sort the groups returned by the proxy. For example, the proxy can sort the groups by name, by id, etc. It can be done using a tool like Sort, etc.
 ### Add filtering
 Filtering can be used to filter the groups returned by the proxy. For example, the proxy can return only the groups that contain a specific word in the name, etc. It can be done using a tool like Specification, etc.
-### Add refresh (cache) flag
-A refresh flag can be added to the endpoint to force the proxy to fetch the data from Gitlab API and update the cache. For example, the proxy can return the groups from the cache if the refresh flag is not set, otherwise, the proxy can fetch the groups from Gitlab API and update the cache.
