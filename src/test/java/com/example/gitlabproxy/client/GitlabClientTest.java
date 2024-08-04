@@ -1,10 +1,5 @@
 package com.example.gitlabproxy.client;
 
-import org.gitlab4j.api.GitLabApi;
-import org.gitlab4j.api.GitLabApiException;
-import org.gitlab4j.api.GroupApi;
-import org.gitlab4j.api.Pager;
-import org.gitlab4j.api.models.Group;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -15,7 +10,10 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.cache.CacheManager;
 
 import com.example.gitlabproxy.AbstractTest;
+import com.example.gitlabproxy.api.GitLabGroupsApi;
+import com.example.gitlabproxy.api.GitLabGroupsApi.Group;
 
+import java.io.IOException;
 import java.util.List;
 
 import static org.mockito.Mockito.*;
@@ -37,21 +35,13 @@ import static org.mockito.Mockito.*;
 class GitlabClientTest extends AbstractTest {
 
     @MockBean
-    private GitLabApi gitLabApi;
-
-    @MockBean
-    private GroupApi mockGroupApi;
+    private GitLabGroupsApi gitLabGroupsApi;
 
     @Autowired
     private GitlabClient gitlabClient;
 
     @Autowired
     private CacheManager cacheManager;
-
-    @BeforeEach
-    void setUp() {
-        when(gitLabApi.getGroupApi()).thenReturn(mockGroupApi);
-    }
 
     @SuppressWarnings("null")
     @BeforeEach
@@ -61,36 +51,31 @@ class GitlabClientTest extends AbstractTest {
 
     @AfterEach
     private void afterEach() {
-        verifyNoMoreInteractions(gitLabApi, mockGroupApi);
+        verifyNoMoreInteractions(gitLabGroupsApi);
     }
 
     @Test
     @DisplayName("Success")
-    void success() throws GitLabApiException {
+    void success() throws IOException {
         List<Group> groups = List.of(
-            new Group().withFullName("test/group1"),
-            new Group().withFullName("test/group2")
+            new Group().withFullPath("test/group1"),
+            new Group().withFullPath("test/group2")
         );
-        @SuppressWarnings("unchecked")
-        Pager<Group> mockPager = mock(Pager.class);
-        when(mockGroupApi.getGroups(100)).thenReturn(mockPager);
-        when(mockPager.page(0)).thenReturn(groups);
+        when(gitLabGroupsApi.getGroups()).thenReturn(groups);
         softly.assertThat(gitlabClient.getGroups(false)).isEqualTo(groups);
-        verify(gitLabApi).getGroupApi();
-        verify(mockGroupApi).getGroups(100);
+        verify(gitLabGroupsApi).getGroups();
     }
 
     @Test
     @DisplayName("Error is propagated")
-    void exception() throws GitLabApiException {
-        when(mockGroupApi.getGroups(100)).thenThrow(new GitLabApiException("test"));
+    void exception() throws IOException {
+        when(gitLabGroupsApi.getGroups()).thenThrow(new IOException("test"));
         softly.assertThatThrownBy(() -> gitlabClient.getGroups(false))
             .isInstanceOf(RuntimeException.class)
             .getCause()
-            .isInstanceOf(GitLabApiException.class)
+            .isInstanceOf(IOException.class)
             .message().isEqualTo("test");
-        verify(gitLabApi).getGroupApi();
-        verify(mockGroupApi).getGroups(100);
+        verify(gitLabGroupsApi).getGroups();
     }
 
     /**
@@ -108,16 +93,13 @@ class GitlabClientTest extends AbstractTest {
      */
     @Test
     @DisplayName("Cache works")
-    void cacheWorks() throws GitLabApiException {
+    void cacheWorks() throws IOException {
         List<Group> groups = List.of(
-            new Group().withFullName("test/group1"),
-            new Group().withFullName("test/group2")
+            new Group().withFullPath("test/group1"),
+            new Group().withFullPath("test/group2")
         );
 
-        @SuppressWarnings("unchecked")
-        Pager<Group> mockPager = mock(Pager.class);
-        when(mockGroupApi.getGroups(100)).thenReturn(mockPager);
-        when(mockPager.page(0)).thenReturn(groups);
+        when(gitLabGroupsApi.getGroups()).thenReturn(groups);
 
         // First call
         List<Group> firstCallResult = gitlabClient.getGroups(false);
@@ -127,22 +109,18 @@ class GitlabClientTest extends AbstractTest {
         List<Group> secondCallResult = gitlabClient.getGroups(false);
         softly.assertThat(secondCallResult.toString()).isEqualTo(groups.toString());
 
-        verify(gitLabApi, times(1)).getGroupApi();
-        verify(mockGroupApi, times(1)).getGroups(100);
+        verify(gitLabGroupsApi, times(1)).getGroups();
     }
     
     @Test
     @DisplayName("Cache refresh works")
-    void cacheRefreshWorks() throws GitLabApiException {
+    void cacheRefreshWorks() throws IOException {
         List<Group> groups = List.of(
-            new Group().withFullName("test/group1"),
-            new Group().withFullName("test/group2")
+            new Group().withFullPath("test/group1"),
+            new Group().withFullPath("test/group2")
         );
 
-        @SuppressWarnings("unchecked")
-        Pager<Group> mockPager = mock(Pager.class);
-        when(mockGroupApi.getGroups(100)).thenReturn(mockPager);
-        when(mockPager.page(0)).thenReturn(groups);
+        when(gitLabGroupsApi.getGroups()).thenReturn(groups);
 
         // First call
         List<Group> firstCallResult = gitlabClient.getGroups(false);
@@ -152,7 +130,6 @@ class GitlabClientTest extends AbstractTest {
         List<Group> secondCallResult = gitlabClient.getGroups(true);
         softly.assertThat(secondCallResult.toString()).isEqualTo(groups.toString());
 
-        verify(gitLabApi, times(2)).getGroupApi();
-        verify(mockGroupApi, times(2)).getGroups(100);
+        verify(gitLabGroupsApi, times(2)).getGroups();
     }
 }

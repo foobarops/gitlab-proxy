@@ -2,20 +2,20 @@
 # https://docs.gradle.org/current/userguide/platforms.html#sub::toml-dependencies-format
 
 [versions]
-org-gitlab4j-gitlab4j-api = "5.6.0"
 org-projectlombok-lombok = "1.18.34"
 org-springframework-boot = "2.7.18"
 org-ehcache-ehcache = "3.10.6"
 javax-cache-cache-api = "1.1.1"
+com-google-code-gson-gson = "2.8.8"
 
 [libraries]
-org-gitlab4j-gitlab4j-api = { module = "org.gitlab4j:gitlab4j-api", version.ref = "org-gitlab4j-gitlab4j-api" }
 org-projectlombok-lombok = { module = "org.projectlombok:lombok", version.ref = "org-projectlombok-lombok" }
 org-springframework-boot-spring-boot-starter-test = { module = "org.springframework.boot:spring-boot-starter-test", version.ref = "org-springframework-boot" }
 org-springframework-boot-spring-boot-starter-web = { module = "org.springframework.boot:spring-boot-starter-web", version.ref = "org-springframework-boot" }
 org-springframework-boot-spring-boot-starter-cache = { module = "org.springframework.boot:spring-boot-starter-cache", version.ref = "org-springframework-boot" }
 org-ehcache-ehcache = { module = "org.ehcache:ehcache", version.ref = "org-ehcache-ehcache" }
 javax-cache-cache-api = { module = "javax.cache:cache-api", version.ref = "javax-cache-cache-api" }
+com-google-code-gson-gson = { module = "com.google.code.gson:gson", version.ref = "com-google-code-gson-gson" }
 
 [plugins]
 spring-boot = { id = "org.springframework.boot", version.ref = "org-springframework-boot" }

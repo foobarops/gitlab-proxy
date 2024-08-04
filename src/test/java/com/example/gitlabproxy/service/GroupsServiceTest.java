@@ -1,9 +1,9 @@
 package com.example.gitlabproxy.service;
 
 import com.example.gitlabproxy.AbstractTest;
+import com.example.gitlabproxy.api.GitLabGroupsApi.Group;
 import com.example.gitlabproxy.api.model.GroupsWrapper;
 import com.example.gitlabproxy.client.GitlabClient;
-import org.gitlab4j.api.models.Group;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
