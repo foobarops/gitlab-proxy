@@ -47,7 +47,7 @@ class GroupsServiceTest extends AbstractTest {
 
     @Test
     void getGroupNamesRefreshed() {
-        when(gitlabClient.getGroups(true)).thenReturn(
+        when(gitlabClient.getGroupsRefreshed()).thenReturn(
                 List.of(
                         new Group().withFullPath("test/group1"),
                         new Group().withFullPath("test/group2")
@@ -58,7 +58,7 @@ class GroupsServiceTest extends AbstractTest {
                 .map(GroupsWrapper.Group::getFullPath)
                 .collect(Collectors.toList())
             ).isEqualTo(List.of("test/group1", "test/group2"));
-        verify(gitlabClient).getGroups(true);
+        verify(gitlabClient).getGroupsRefreshed();
     }
 
     @Test
@@ -80,7 +80,7 @@ class GroupsServiceTest extends AbstractTest {
 
     @Test
     void getGroupNamesFilteredRefreshed() {
-        when(gitlabClient.getGroups(true)).thenReturn(
+        when(gitlabClient.getGroupsRefreshed()).thenReturn(
                 List.of(
                         new Group().withFullPath("test/group1"),
                         new Group().withFullPath("test/group2"),
@@ -92,6 +92,6 @@ class GroupsServiceTest extends AbstractTest {
                 .map(GroupsWrapper.Group::getFullPath)
                 .collect(Collectors.toList())
             ).isEqualTo(List.of("test/group2"));
-        verify(gitlabClient).getGroups(true);
+        verify(gitlabClient).getGroupsRefreshed();
     }
 }

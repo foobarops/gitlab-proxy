@@ -149,7 +149,7 @@ class GitlabClientTest extends AbstractTest {
         softly.assertThat(firstCallResult).isEqualTo(groups);
 
         // Second call
-        List<Group> secondCallResult = gitlabClient.getGroups(true);
+        List<Group> secondCallResult = gitlabClient.getGroupsRefreshed();
         softly.assertThat(secondCallResult.toString()).isEqualTo(groups.toString());
 
         verify(gitLabApi, times(2)).getGroupApi();
