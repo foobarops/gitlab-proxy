@@ -130,4 +130,29 @@ class GitlabClientTest extends AbstractTest {
         verify(gitLabApi, times(1)).getGroupApi();
         verify(mockGroupApi, times(1)).getGroups(100);
     }
+    
+    @Test
+    @DisplayName("Cache refresh works")
+    void cacheRefreshWorks() throws GitLabApiException {
+        List<Group> groups = List.of(
+            new Group().withFullName("test/group1"),
+            new Group().withFullName("test/group2")
+        );
+
+        @SuppressWarnings("unchecked")
+        Pager<Group> mockPager = mock(Pager.class);
+        when(mockGroupApi.getGroups(100)).thenReturn(mockPager);
+        when(mockPager.page(0)).thenReturn(groups);
+
+        // First call
+        List<Group> firstCallResult = gitlabClient.getGroups();
+        softly.assertThat(firstCallResult).isEqualTo(groups);
+
+        // Second call
+        List<Group> secondCallResult = gitlabClient.getGroups(true);
+        softly.assertThat(secondCallResult.toString()).isEqualTo(groups.toString());
+
+        verify(gitLabApi, times(2)).getGroupApi();
+        verify(mockGroupApi, times(2)).getGroups(100);
+    }
 }
