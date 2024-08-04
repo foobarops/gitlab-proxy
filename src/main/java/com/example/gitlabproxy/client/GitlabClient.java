@@ -17,28 +17,13 @@ public class GitlabClient {
     private final GitLabApi gitLabApi;
 
     /**
-     * This method is used to get the groups from the cache.
+     * This method is used to get the groups from the cache. Optionally, it can refresh the cache.
+     * @param refresh boolean whether to refresh the cache
      * @return List<Group>
      */
-    @Cacheable(value = "groupsCache", key = "'getGroups'")
-    public List<Group> getGroups() {
-        return fetchGroups();
-    }
-
-    /**
-     * This method is used to refresh the cache along with returning the groups.
-     * @return List<Group>
-     */
-    @CachePut(value = "groupsCache", key = "'getGroups'")
-    public List<Group> getGroupsRefreshed() {
-        return fetchGroups();
-    }
-
-    /**
-     * This method fetches the groups from the GitLab API.
-     * @return List<Group>
-     */
-    private List<Group> fetchGroups() {
+    @Cacheable(value = "groupsCache", key = "#root.methodName")
+    @CachePut(value = "groupsCache", key = "#root.methodName", condition = "#refresh")
+    public List<Group> getGroups(boolean refresh) {
         try {
             return gitLabApi.getGroupApi().getGroups(100).page(0);
         } catch (GitLabApiException e) {

@@ -75,7 +75,7 @@ class GitlabClientTest extends AbstractTest {
         Pager<Group> mockPager = mock(Pager.class);
         when(mockGroupApi.getGroups(100)).thenReturn(mockPager);
         when(mockPager.page(0)).thenReturn(groups);
-        softly.assertThat(gitlabClient.getGroups()).isEqualTo(groups);
+        softly.assertThat(gitlabClient.getGroups(false)).isEqualTo(groups);
         verify(gitLabApi).getGroupApi();
         verify(mockGroupApi).getGroups(100);
     }
@@ -84,7 +84,7 @@ class GitlabClientTest extends AbstractTest {
     @DisplayName("Error is propagated")
     void exception() throws GitLabApiException {
         when(mockGroupApi.getGroups(100)).thenThrow(new GitLabApiException("test"));
-        softly.assertThatThrownBy(() -> gitlabClient.getGroups())
+        softly.assertThatThrownBy(() -> gitlabClient.getGroups(false))
             .isInstanceOf(RuntimeException.class)
             .getCause()
             .isInstanceOf(GitLabApiException.class)
@@ -120,11 +120,11 @@ class GitlabClientTest extends AbstractTest {
         when(mockPager.page(0)).thenReturn(groups);
 
         // First call
-        List<Group> firstCallResult = gitlabClient.getGroups();
+        List<Group> firstCallResult = gitlabClient.getGroups(false);
         softly.assertThat(firstCallResult).isEqualTo(groups);
 
         // Second call
-        List<Group> secondCallResult = gitlabClient.getGroups();
+        List<Group> secondCallResult = gitlabClient.getGroups(false);
         softly.assertThat(secondCallResult.toString()).isEqualTo(groups.toString());
 
         verify(gitLabApi, times(1)).getGroupApi();
@@ -145,11 +145,11 @@ class GitlabClientTest extends AbstractTest {
         when(mockPager.page(0)).thenReturn(groups);
 
         // First call
-        List<Group> firstCallResult = gitlabClient.getGroups();
+        List<Group> firstCallResult = gitlabClient.getGroups(false);
         softly.assertThat(firstCallResult).isEqualTo(groups);
 
         // Second call
-        List<Group> secondCallResult = gitlabClient.getGroupsRefreshed();
+        List<Group> secondCallResult = gitlabClient.getGroups(true);
         softly.assertThat(secondCallResult.toString()).isEqualTo(groups.toString());
 
         verify(gitLabApi, times(2)).getGroupApi();
