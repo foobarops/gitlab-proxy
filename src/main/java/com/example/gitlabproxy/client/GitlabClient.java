@@ -16,13 +16,13 @@ public class GitlabClient {
     
     private final GitLabApi gitLabApi;
 
+    /**
+     * This method is used to get the groups from the cache.
+     * @return
+     */
     @Cacheable(value = "groupsCache", key = "#root.methodName")
     public List<Group> getGroups() {
-        try {
-            return gitLabApi.getGroupApi().getGroups(100).page(0);
-        } catch (GitLabApiException e) {
-            throw new RuntimeException(e);
-        }
+        return fetchGroups();
     }
 
     /**
@@ -32,7 +32,18 @@ public class GitlabClient {
      */
     @CachePut(value = "groupsCache", key = "#root.methodName")
     public List<Group> getGroups(boolean forceRefresh) {
-        // Call the original method to get the result
-        return getGroups();
+        return fetchGroups();
+    }
+
+    /**
+     * This method fetches the groups from the GitLab API.
+     * @return
+     */
+    private List<Group> fetchGroups() {
+        try {
+            return gitLabApi.getGroupApi().getGroups(100).page(0);
+        } catch (GitLabApiException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
