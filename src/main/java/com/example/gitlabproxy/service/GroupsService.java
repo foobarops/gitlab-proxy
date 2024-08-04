@@ -18,12 +18,24 @@ public class GroupsService {
      *
      * @return wrapped list of group info
      */
-    public GroupsWrapper getGroups() {
+    public GroupsWrapper getGroups(boolean refresh) {
         return GroupsWrapper.builder()
-            .groups(gitlabClient.getGroups().stream()
-                .map(group -> GroupsWrapper.Group.builder().fullPath(group.getFullPath()).build())
+            .groups((
+                refresh
+                    ? gitlabClient.getGroups(true)
+                    : gitlabClient.getGroups()
+                ).stream()
+                .map(group -> GroupsWrapper.Group.builder()
+                    .fullPath(group.getFullPath()).build())
                 .collect(Collectors.toList()))
             .build();
     }
-
+    /**
+     * Returns info about publicly available GitLab groups without forcing a refresh
+     *
+     * @return wrapped list of group info
+     */
+    public GroupsWrapper getGroups() {
+        return getGroups(false);
+    }
 }

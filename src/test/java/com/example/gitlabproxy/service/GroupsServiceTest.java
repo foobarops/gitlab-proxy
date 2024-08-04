@@ -38,10 +38,26 @@ class GroupsServiceTest extends AbstractTest {
                 )
         );
         softly.assertThat(
-            groupsService.getGroups().getGroups().stream()
+            groupsService.getGroups(false).getGroups().stream()
                 .map(GroupsWrapper.Group::getFullPath)
                 .collect(Collectors.toList())
             ).isEqualTo(List.of("test/group1", "test/group2"));
         verify(gitlabClient).getGroups();
+    }
+
+    @Test
+    void getGroupNamesRefreshed() {
+        when(gitlabClient.getGroups(true)).thenReturn(
+                List.of(
+                        new Group().withFullPath("test/group1"),
+                        new Group().withFullPath("test/group2")
+                )
+        );
+        softly.assertThat(
+            groupsService.getGroups(true).getGroups().stream()
+                .map(GroupsWrapper.Group::getFullPath)
+                .collect(Collectors.toList())
+            ).isEqualTo(List.of("test/group1", "test/group2"));
+        verify(gitlabClient).getGroups(true);
     }
 }
