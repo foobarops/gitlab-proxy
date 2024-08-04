@@ -20,18 +20,6 @@ public class GroupsController {
         @RequestParam(value = "refresh", required = false) boolean refresh,
         @RequestParam(value = "filter", required = false) String filter
         ) {
-        if (filter != null) {
-            // Perform filter logic here
-            if (refresh) {
-                // Perform refresh logic here
-                return groupsService.getGroupsFiltered(filter, true);
-            }
-            return groupsService.getGroupsFiltered(filter);
-        }
-        if (refresh) {
-            // Perform refresh logic here
-            return groupsService.getGroups(true);
-        }
-        return groupsService.getGroups();
+        return groupsService.getGroups(filter, refresh);
     }
 }

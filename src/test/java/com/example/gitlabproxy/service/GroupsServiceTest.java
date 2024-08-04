@@ -38,7 +38,7 @@ class GroupsServiceTest extends AbstractTest {
                 )
         );
         softly.assertThat(
-            groupsService.getGroups(false).getGroups().stream()
+            groupsService.getGroups(null, false).getGroups().stream()
                 .map(GroupsWrapper.Group::getFullPath)
                 .collect(Collectors.toList())
             ).isEqualTo(List.of("test/group1", "test/group2"));
@@ -54,7 +54,7 @@ class GroupsServiceTest extends AbstractTest {
                 )
         );
         softly.assertThat(
-            groupsService.getGroups(true).getGroups().stream()
+            groupsService.getGroups(null, true).getGroups().stream()
                 .map(GroupsWrapper.Group::getFullPath)
                 .collect(Collectors.toList())
             ).isEqualTo(List.of("test/group1", "test/group2"));
@@ -71,7 +71,7 @@ class GroupsServiceTest extends AbstractTest {
                 )
         );
         softly.assertThat(
-            groupsService.getGroupsFiltered("group2").getGroups().stream()
+            groupsService.getGroups("group2", false).getGroups().stream()
                 .map(GroupsWrapper.Group::getFullPath)
                 .collect(Collectors.toList())
             ).isEqualTo(List.of("test/group2"));
@@ -88,7 +88,7 @@ class GroupsServiceTest extends AbstractTest {
                 )
         );
         softly.assertThat(
-            groupsService.getGroupsFiltered("group2", true).getGroups().stream()
+            groupsService.getGroups("group2", true).getGroups().stream()
                 .map(GroupsWrapper.Group::getFullPath)
                 .collect(Collectors.toList())
             ).isEqualTo(List.of("test/group2"));

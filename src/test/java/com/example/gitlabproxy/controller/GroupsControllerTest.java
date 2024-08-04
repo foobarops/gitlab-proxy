@@ -37,7 +37,7 @@ class GroupsControllerTest {
     @Test
     @DisplayName("GET: Result of 2 elements")
     void getGroups() throws Exception {
-        when(groupsService.getGroups()).thenReturn(
+        when(groupsService.getGroups(null, false)).thenReturn(
             GroupsWrapper.builder().groups(List.of(
                 GroupsWrapper.Group.builder().fullPath("test/group1").build(),
                 GroupsWrapper.Group.builder().fullPath("test/group2").build())).build()
@@ -47,13 +47,13 @@ class GroupsControllerTest {
             .andExpect(status().isOk())
             .andExpect(content().json(
                 "{\"groups\": [{\"fullPath\":\"test/group1\"}, {\"fullPath\":\"test/group2\"}]}"));
-        verify(groupsService).getGroups();
+        verify(groupsService).getGroups(null, false);
     }
 
     @Test
     @DisplayName("GET: Result with refresh")
     void getGroupsRefreshed() throws Exception {
-        when(groupsService.getGroups(true)).thenReturn(
+        when(groupsService.getGroups(null, true)).thenReturn(
             GroupsWrapper.builder().groups(List.of(
                 GroupsWrapper.Group.builder().fullPath("test/group1").build(),
                 GroupsWrapper.Group.builder().fullPath("test/group2").build())).build()
@@ -63,26 +63,26 @@ class GroupsControllerTest {
             .andExpect(status().isOk())
             .andExpect(content().json(
                 "{\"groups\": [{\"fullPath\":\"test/group1\"}, {\"fullPath\":\"test/group2\"}]}"));
-        verify(groupsService).getGroups(true);
+        verify(groupsService).getGroups(null, true);
     }
 
     @Test
     @DisplayName("GET: Empty result")
     void getGroupsEmptyResult() throws Exception {
-        when(groupsService.getGroups()).thenReturn(
+        when(groupsService.getGroups(null, false)).thenReturn(
             GroupsWrapper.builder().groups(List.of()).build()
         );
         this.mockMvc
             .perform(get("/groups"))
             .andExpect(status().isOk())
             .andExpect(content().json("{\"groups\": []}"));
-        verify(groupsService).getGroups();
+        verify(groupsService).getGroups(null, false);
     }
 
     @Test
     @DisplayName("GET: Filtered result")
     void getGroupsFiltered() throws Exception {
-        when(groupsService.getGroupsFiltered("group2")).thenReturn(
+        when(groupsService.getGroups("group2", false)).thenReturn(
             GroupsWrapper.builder().groups(List.of(
                 GroupsWrapper.Group.builder().fullPath("test/group2").build())).build()
         );
@@ -91,13 +91,13 @@ class GroupsControllerTest {
             .andExpect(status().isOk())
             .andExpect(content().json(
                 "{\"groups\": [{\"fullPath\":\"test/group2\"}]}"));
-        verify(groupsService).getGroupsFiltered("group2");
+        verify(groupsService).getGroups("group2", false);
     }
 
     @Test
     @DisplayName("GET: Filtered result with refresh")
     void getGroupsFilteredRefreshed() throws Exception {
-        when(groupsService.getGroupsFiltered("group2", true)).thenReturn(
+        when(groupsService.getGroups("group2", true)).thenReturn(
             GroupsWrapper.builder().groups(List.of(
                 GroupsWrapper.Group.builder().fullPath("test/group2").build())).build()
         );
@@ -106,7 +106,7 @@ class GroupsControllerTest {
             .andExpect(status().isOk())
             .andExpect(content().json(
                 "{\"groups\": [{\"fullPath\":\"test/group2\"}]}"));
-        verify(groupsService).getGroupsFiltered("group2", true);
+        verify(groupsService).getGroups("group2", true);
     }
 
 }
