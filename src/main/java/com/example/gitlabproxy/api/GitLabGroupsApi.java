@@ -1,17 +1,17 @@
 package com.example.gitlabproxy.api;
 
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.Serializable;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestTemplate;
+
 import com.google.gson.Gson;
+import com.google.gson.annotations.SerializedName;
 import com.google.gson.reflect.TypeToken;
 
 import lombok.AllArgsConstructor;
@@ -26,56 +26,29 @@ public class GitLabGroupsApi {
 
 	private final String apiUrl;
 	private final String privateToken;
+    private final RestTemplate restTemplate;
+    private final Gson gson = new Gson();
 
-	public List<Group> getGroups() throws IOException {
+	public List<Group> getGroups() {
 		String url = apiUrl + "/groups?per_page=100&pagination=keyset&order_by=name";
-        List<Group> result = new ArrayList<>();
+		List<Group> result = new ArrayList<>();
         int cycles = 0;
-        while (url != null && cycles++ < 2) {
-                
-            HttpURLConnection connection = createConnection(url);
-            connection.setRequestMethod("GET");
+		while (url != null && cycles++ < 2) {
+			// Create headers
+			HttpHeaders headers = new HttpHeaders();
+			headers.set("Private-Token", privateToken);
 
-            int responseCode = connection.getResponseCode();
-            if (responseCode == HttpURLConnection.HTTP_OK) {
-                url = connection.getHeaderField("link").replaceFirst("^<", "").replaceFirst(">.*", "");
-                // String nextPageUrl = extractNextPageUrl(linkHeader);
-                InputStreamReader reader = new InputStreamReader(connection.getInputStream());
-                result.addAll(new Gson().fromJson(reader, new TypeToken<List<Group>>(){}.getType()));
-            } else {
-                throw new IOException("Failed to get groups: " + responseCode);
-            }
-        }
-        return result;
-	}
+			// Create entity with headers
+			HttpEntity<String> entity = new HttpEntity<>(headers);
 
-	public Group getGroup(int groupId) throws IOException {
-		String url = apiUrl + "/groups/" + groupId;
-		HttpURLConnection connection = createConnection(url);
-		connection.setRequestMethod("GET");
-
-		int responseCode = connection.getResponseCode();
-		if (responseCode == HttpURLConnection.HTTP_OK) {
-			InputStreamReader reader = new InputStreamReader(connection.getInputStream());
-			return new Gson().fromJson(reader, Group.class);
-		} else {
-			throw new IOException("Failed to get group: " + responseCode);
+			// Make the request
+			ResponseEntity<String> response = restTemplate.exchange(url.replaceFirst("^<", "").replaceFirst(">.*", ""), HttpMethod.GET, entity, String.class);
+			// Get the 'link' header from the response
+			url = response.getHeaders().getFirst("link");
+			// Parse the response
+			result.addAll(gson.fromJson(response.getBody(), new TypeToken<List<Group>>(){}.getType()));
 		}
-	}
-
-	private HttpURLConnection createConnection(String urlString) throws IOException {
-		URL url;
-		try {
-			url = new URI(urlString).toURL();
-		} catch (URISyntaxException e) {
-			throw new MalformedURLException("Failed to create connection: " + e.getMessage());
-		}
-		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-		if (privateToken != null) {
-			connection.setRequestProperty("PRIVATE-TOKEN", privateToken);
-		}
-		connection.setRequestProperty("Accept", "application/json");
-		return connection;
+		return result;
 	}
 
     @Getter
@@ -86,6 +59,6 @@ public class GitLabGroupsApi {
 		@With private int id;
 		@With private String name;
 		@With private String path;
-		@With private String fullPath;
+		@With @SerializedName("full_path") private String fullPath;
 	}
 }

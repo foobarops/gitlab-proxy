@@ -71,11 +71,9 @@ class GitlabClientTest extends AbstractTest {
     @Test
     @DisplayName("Error is propagated")
     void exception() throws IOException {
-        when(gitLabGroupsApi.getGroups()).thenThrow(new IOException("test"));
+        when(gitLabGroupsApi.getGroups()).thenThrow(new RuntimeException("test"));
         softly.assertThatThrownBy(() -> gitlabClient.getGroups(false))
             .isInstanceOf(RuntimeException.class)
-            .getCause()
-            .isInstanceOf(IOException.class)
             .message().isEqualTo("test");
         verify(gitLabGroupsApi).getGroups();
     }

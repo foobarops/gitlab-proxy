@@ -7,7 +7,6 @@ import org.springframework.stereotype.Component;
 import com.example.gitlabproxy.api.GitLabGroupsApi;
 import com.example.gitlabproxy.api.GitLabGroupsApi.Group;
 
-import java.io.IOException;
 import java.util.List;
 
 @Component
@@ -24,10 +23,6 @@ public class GitlabClient {
     @Cacheable(value = "groupsCache", key = "#root.methodName")
     @CachePut(value = "groupsCache", key = "#root.methodName", condition = "#refresh")
     public List<Group> getGroups(boolean refresh) {
-        try {
-            return gitLabGroupsApi.getGroups();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        return gitLabGroupsApi.getGroups();
     }
 }
