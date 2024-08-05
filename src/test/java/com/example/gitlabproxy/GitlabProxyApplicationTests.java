@@ -6,10 +6,17 @@ import org.ehcache.jsr107.EhcacheCachingProvider;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.mock.mockito.MockBeans;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.jcache.JCacheCacheManager;
+import org.springframework.test.context.ActiveProfiles;
 
+@ActiveProfiles("test")
 @SpringBootTest
+@MockBeans({
+    @MockBean(com.example.gitlabproxy.api.GitLabGroupsApi.class),
+})
 class GitlabProxyApplicationTests extends AbstractTest {
 
     @Autowired

@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 
 import com.example.gitlabproxy.api.GitLabGroupsApi;
 
@@ -11,8 +12,9 @@ import com.example.gitlabproxy.api.GitLabGroupsApi;
 @EnableCaching
 public class GitlabConfig {
 
+    @Profile("default")
     @Bean
-    GitLabGroupsApi gitLabApi(@Value("${gitlab.api.url}") String apiUrl) {
+    GitLabGroupsApi gitLabGroupsApi(@Value("${gitlab.api.url}") String apiUrl) {
         return new GitLabGroupsApi(apiUrl, null);
     }
 

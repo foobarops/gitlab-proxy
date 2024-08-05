@@ -1,6 +1,7 @@
 package com.example.gitlabproxy.controller;
 
 import com.example.gitlabproxy.api.model.GroupsWrapper;
+import com.example.gitlabproxy.client.GitlabClient;
 import com.example.gitlabproxy.service.GroupsService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
@@ -9,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.mock.mockito.MockBeans;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
@@ -18,7 +21,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@ActiveProfiles("test")
 @SpringBootTest
+@MockBeans({
+    @MockBean(GitlabClient.class),
+})
 @AutoConfigureMockMvc
 @DisplayName("GroupsController tests")
 class GroupsControllerTest {

@@ -11,24 +11,21 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.stereotype.Component;
-
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import lombok.With;
 
-@Component
-@NoArgsConstructor
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class GitLabGroupsApi {
 
-	private String apiUrl;
-	private String privateToken;
+	private final String apiUrl;
+	private final String privateToken;
 
 	public List<Group> getGroups() throws IOException {
 		String url = apiUrl + "/groups?per_page=100&pagination=keyset&order_by=name";

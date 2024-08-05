@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.cache.CacheManager;
+import org.springframework.test.context.ActiveProfiles;
 
 import com.example.gitlabproxy.AbstractTest;
 import com.example.gitlabproxy.api.GitLabGroupsApi;
@@ -32,6 +33,7 @@ import static org.mockito.Mockito.*;
  * @see com.example.gitlabproxy.client.GitlabClient
  */
 @SpringBootTest
+@ActiveProfiles("test")
 class GitlabClientTest extends AbstractTest {
 
     @MockBean
@@ -82,12 +84,9 @@ class GitlabClientTest extends AbstractTest {
      * Test case to verify that the cache works correctly.
      * 
      * This test method performs the following steps:
-     * 1. Creates a list of groups.
-     * 2. Sets up the necessary mock objects for the GitLab API.
-     * 3. Calls the `getGroups` method of the `gitlabClient` object twice.
-     * 4. Verifies that the results of both calls are equal to the initial list of groups.
-     * 5. Verifies that the `getGroupApi` method of the `gitLabApi` object is called only once.
-     * 6. Verifies that the `getGroups` method of the `mockGroupApi` object is called only once with the correct parameter.
+     * 1. Mock the GitLab API to return a list of groups.
+     * 2. Call the getGroups method on the GitlabClient twice.
+     * 3. Verify that the GitLab API is called only once.
      * 
      * @see com.example.gitlabproxy.client.GitlabClient#getGroups()
      */
