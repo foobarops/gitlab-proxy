@@ -53,4 +53,24 @@ public class GitLabGroupsApiTest extends AbstractTest {
         softly.assertThat(group.getPath()).isEqualTo("test-group");
         softly.assertThat(group.getFullPath()).isEqualTo("path/test-group");
     }
+
+    @Test
+    void testDecodeURI() throws IOException {
+        // Arrange
+        String mockResponse = "[]";
+        mockServer.expect(requestTo("https://gitlab.com/api/v4/groups?per_page=100&pagination=keyset&order_by=name"))
+                  .andRespond(withSuccess(mockResponse, MediaType.APPLICATION_JSON).headers(
+                      new org.springframework.http.HttpHeaders() {{
+                          add("link", "<https://gitlab.com/api/v4/groups?per_page=100&pagination=keyset&order_by=name&cursor=2%3D>; rel=\"next\"");
+                      }}
+                  ));
+        mockServer.expect(requestTo("https://gitlab.com/api/v4/groups?per_page=100&pagination=keyset&order_by=name&cursor=2%3D"))
+                    .andRespond(withSuccess(mockResponse, MediaType.APPLICATION_JSON));
+
+        // Act
+        gitLabGroupsApi.getGroups();
+
+        // Assert
+        mockServer.verify();
+    }
 }

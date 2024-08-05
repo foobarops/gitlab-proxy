@@ -1,6 +1,9 @@
 package com.example.gitlabproxy.api;
 
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,13 +29,13 @@ public class GitLabGroupsApi {
 
 	private final String apiUrl;
 	private final String privateToken;
-    private final RestTemplate restTemplate;
-    private final Gson gson = new Gson();
+	private final RestTemplate restTemplate;
+	private final Gson gson = new Gson();
 
 	public List<Group> getGroups() {
 		String url = apiUrl + "/groups?per_page=100&pagination=keyset&order_by=name";
 		List<Group> result = new ArrayList<>();
-        int cycles = 0;
+		int cycles = 0;
 		while (url != null && cycles++ < 2) {
 			// Create headers
 			HttpHeaders headers = new HttpHeaders();
@@ -41,17 +44,30 @@ public class GitLabGroupsApi {
 			// Create entity with headers
 			HttpEntity<String> entity = new HttpEntity<>(headers);
 
+			// Decode the URI
+			String decodedUrl = decodeUri(url);
+
 			// Make the request
-			ResponseEntity<String> response = restTemplate.exchange(url.replaceFirst("^<", "").replaceFirst(">.*", ""), HttpMethod.GET, entity, String.class);
+			ResponseEntity<String> response = restTemplate.exchange(decodedUrl, HttpMethod.GET, entity, String.class);
+
 			// Get the 'link' header from the response
 			url = response.getHeaders().getFirst("link");
+
 			// Parse the response
 			result.addAll(gson.fromJson(response.getBody(), new TypeToken<List<Group>>(){}.getType()));
 		}
 		return result;
 	}
 
-    @Getter
+	private String decodeUri(String uri) {
+		try {
+			return URLDecoder.decode(uri.replaceFirst("^<", "").replaceFirst(">.*", ""), StandardCharsets.UTF_8.toString());
+		} catch (UnsupportedEncodingException e) {
+			throw new RuntimeException("Failed to decode URL", e);
+		}
+	}
+
+	@Getter
 	@NoArgsConstructor
 	@AllArgsConstructor
 	@ToString
