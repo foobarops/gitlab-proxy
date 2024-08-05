@@ -4,6 +4,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Serializable;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,21 +17,18 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.With;
 
 @Component
+@NoArgsConstructor
+@AllArgsConstructor
 public class GitLabGroupsApi {
 
 	private static final String API_URL = "https://gitlab.com/api/v4";
 	private String privateToken;
-
-	public GitLabGroupsApi() {
-		this.privateToken = null;
-	}
 
 	public List<Group> getGroups() throws IOException {
 		String url = API_URL + "/groups?per_page=100&pagination=keyset&order_by=name";
@@ -67,9 +67,16 @@ public class GitLabGroupsApi {
 	}
 
 	private HttpURLConnection createConnection(String urlString) throws IOException {
-		URL url = new URL(urlString);
+		URL url;
+		try {
+			url = new URI(urlString).toURL();
+		} catch (URISyntaxException e) {
+			throw new MalformedURLException("Failed to create connection: " + e.getMessage());
+		}
 		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-		// connection.setRequestProperty("PRIVATE-TOKEN", privateToken);
+		if (privateToken != null) {
+			connection.setRequestProperty("PRIVATE-TOKEN", privateToken);
+		}
 		connection.setRequestProperty("Accept", "application/json");
 		return connection;
 	}
