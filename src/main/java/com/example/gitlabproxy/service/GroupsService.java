@@ -25,7 +25,12 @@ public class GroupsService {
             .groups(gitlabClient.getGroups(refresh).stream()
             .filter(group -> filter == null || group.getFullPath().contains(filter))
             .map(group -> GroupsWrapper.Group.builder()
-                .fullPath(group.getFullPath()).build())
+                    .id(group.getId())
+                    .name(group.getName())
+                    .path(group.getPath())
+                    .fullPath(group.getFullPath())
+                    .build()
+                )
             .collect(Collectors.toList()))
             .build();
     }

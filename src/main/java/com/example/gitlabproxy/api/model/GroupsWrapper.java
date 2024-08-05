@@ -14,6 +14,9 @@ public class GroupsWrapper {
     @Value
     @Builder
     public static class Group {
+        int id;
+        String name;
+        String path;
         String fullPath;
     }
 

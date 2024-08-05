@@ -18,6 +18,7 @@ import com.google.gson.annotations.SerializedName;
 import com.google.gson.reflect.TypeToken;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
@@ -71,6 +72,7 @@ public class GitLabGroupsApi {
 	@NoArgsConstructor
 	@AllArgsConstructor
 	@ToString
+	@Builder
 	public static class Group implements Serializable {
 		@With private int id;
 		@With private String name;
