@@ -27,11 +27,11 @@ import lombok.With;
 @AllArgsConstructor
 public class GitLabGroupsApi {
 
-	private static final String API_URL = "https://gitlab.com/api/v4";
+	private String apiUrl;
 	private String privateToken;
 
 	public List<Group> getGroups() throws IOException {
-		String url = API_URL + "/groups?per_page=100&pagination=keyset&order_by=name";
+		String url = apiUrl + "/groups?per_page=100&pagination=keyset&order_by=name";
         List<Group> result = new ArrayList<>();
         int cycles = 0;
         while (url != null && cycles++ < 2) {
@@ -53,7 +53,7 @@ public class GitLabGroupsApi {
 	}
 
 	public Group getGroup(int groupId) throws IOException {
-		String url = API_URL + "/groups/" + groupId;
+		String url = apiUrl + "/groups/" + groupId;
 		HttpURLConnection connection = createConnection(url);
 		connection.setRequestMethod("GET");
 
