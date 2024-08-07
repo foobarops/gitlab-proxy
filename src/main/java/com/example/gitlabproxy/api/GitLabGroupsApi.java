@@ -7,13 +7,13 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.ConstructorBinding;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
-import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
@@ -33,23 +33,29 @@ import lombok.With;
 @Component
 @RequiredArgsConstructor
 public class GitLabGroupsApi {
+	
+	@ConstructorBinding
+	@ConfigurationProperties(prefix = "gitlab.api")
+	@RequiredArgsConstructor
+	@Getter
+	public static class Config {
+		private final String url;
+		private final String privateToken;
+	}
 
-	@Value("${gitlab.api.url}")
-	private String apiUrl;
-	@Nullable
-	@Value("${gitlab.api.private-token:}")
-	private String privateToken;
+	private final Config config;
+
 	private final RestTemplate restTemplate;
 	private final Gson gson = new Gson();
 
 	public List<Group> getGroups() {
-		String url = apiUrl + "/groups?per_page=100&pagination=keyset&order_by=name";
+		String url = config.getUrl() + "/groups?per_page=100&pagination=keyset&order_by=name";
 		List<Group> result = new ArrayList<>();
 		int cycles = 0;
 		while (url != null && cycles++ < 2) {
 			// Create headers
 			HttpHeaders headers = new HttpHeaders();
-			headers.set("Private-Token", privateToken);
+			headers.set("Private-Token", config.getPrivateToken());
 
 			// Create entity with headers
 			HttpEntity<String> entity = new HttpEntity<>(headers);
