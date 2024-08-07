@@ -13,6 +13,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
@@ -24,27 +25,22 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import lombok.With;
 
 @Profile("default")
 @Component
+@RequiredArgsConstructor
 public class GitLabGroupsApi {
 
-	private final String apiUrl;
-	private final String privateToken;
+	@Value("${gitlab.api.url}")
+	private String apiUrl;
+	@Nullable
+	@Value("${gitlab.api.private-token:}")
+	private String privateToken;
 	private final RestTemplate restTemplate;
 	private final Gson gson = new Gson();
-	
-	public GitLabGroupsApi(
-		@Value("${gitlab.api.url}") String apiUrl,
-		@Value("${gitlab.api.private-token:}") String privateToken,
-		RestTemplate restTemplate
-	) {
-		this.apiUrl = apiUrl;
-		this.privateToken = !privateToken.isEmpty() ? privateToken : null;
-		this.restTemplate = restTemplate;
-	}
 
 	public List<Group> getGroups() {
 		String url = apiUrl + "/groups?per_page=100&pagination=keyset&order_by=name";
