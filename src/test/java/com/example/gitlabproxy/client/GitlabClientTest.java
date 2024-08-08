@@ -11,7 +11,7 @@ import org.springframework.cache.CacheManager;
 import org.springframework.test.context.ActiveProfiles;
 
 import com.example.gitlabproxy.AbstractTest;
-import com.example.gitlabproxy.client.GitlabClientGroups.Group;
+import com.example.gitlabproxy.client.GitlabClientClient.Group;
 
 import java.io.IOException;
 import java.util.List;
@@ -36,7 +36,7 @@ import static org.mockito.Mockito.*;
 class GitlabClientTest extends AbstractTest {
 
     @MockBean
-    private GitlabClientGroups gitLabGroupsApi;
+    private GitlabClientClient gitlabGroupsClient;
 
     @Autowired
     private GitlabClient gitlabClient;
@@ -52,7 +52,7 @@ class GitlabClientTest extends AbstractTest {
 
     @AfterEach
     private void afterEach() {
-        verifyNoMoreInteractions(gitLabGroupsApi);
+        verifyNoMoreInteractions(gitlabGroupsClient);
     }
 
     @Test
@@ -62,19 +62,19 @@ class GitlabClientTest extends AbstractTest {
             new Group().withFullPath("test/group1"),
             new Group().withFullPath("test/group2")
         );
-        when(gitLabGroupsApi.getGroups()).thenReturn(groups);
+        when(gitlabGroupsClient.getGroups()).thenReturn(groups);
         softly.assertThat(gitlabClient.getGroups(false)).isEqualTo(groups);
-        verify(gitLabGroupsApi).getGroups();
+        verify(gitlabGroupsClient).getGroups();
     }
 
     @Test
     @DisplayName("Error is propagated")
     void exception() throws IOException {
-        when(gitLabGroupsApi.getGroups()).thenThrow(new RuntimeException("test"));
+        when(gitlabGroupsClient.getGroups()).thenThrow(new RuntimeException("test"));
         softly.assertThatThrownBy(() -> gitlabClient.getGroups(false))
             .isInstanceOf(RuntimeException.class)
             .message().isEqualTo("test");
-        verify(gitLabGroupsApi).getGroups();
+        verify(gitlabGroupsClient).getGroups();
     }
 
     /**
@@ -95,7 +95,7 @@ class GitlabClientTest extends AbstractTest {
             new Group().withFullPath("test/group2")
         );
 
-        when(gitLabGroupsApi.getGroups()).thenReturn(groups);
+        when(gitlabGroupsClient.getGroups()).thenReturn(groups);
 
         // First call
         List<Group> firstCallResult = gitlabClient.getGroups(false);
@@ -105,7 +105,7 @@ class GitlabClientTest extends AbstractTest {
         List<Group> secondCallResult = gitlabClient.getGroups(false);
         softly.assertThat(secondCallResult.toString()).isEqualTo(groups.toString());
 
-        verify(gitLabGroupsApi, times(1)).getGroups();
+        verify(gitlabGroupsClient, times(1)).getGroups();
     }
     
     @Test
@@ -116,7 +116,7 @@ class GitlabClientTest extends AbstractTest {
             new Group().withFullPath("test/group2")
         );
 
-        when(gitLabGroupsApi.getGroups()).thenReturn(groups);
+        when(gitlabGroupsClient.getGroups()).thenReturn(groups);
 
         // First call
         List<Group> firstCallResult = gitlabClient.getGroups(false);
@@ -126,6 +126,6 @@ class GitlabClientTest extends AbstractTest {
         List<Group> secondCallResult = gitlabClient.getGroups(true);
         softly.assertThat(secondCallResult.toString()).isEqualTo(groups.toString());
 
-        verify(gitLabGroupsApi, times(2)).getGroups();
+        verify(gitlabGroupsClient, times(2)).getGroups();
     }
 }

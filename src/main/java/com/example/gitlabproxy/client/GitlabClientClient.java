@@ -31,7 +31,7 @@ import lombok.With;
 @Profile("client")
 @Component
 @RequiredArgsConstructor
-public class GitlabClientGroups {
+public class GitlabClientClient {
 	
 	private final Client.Config config;
 

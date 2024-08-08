@@ -16,14 +16,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.example.gitlabproxy.AbstractTest;
-import com.example.gitlabproxy.client.GitlabClientGroups.Group;
+import com.example.gitlabproxy.client.GitlabClientClient.Group;
 
 @SpringBootTest
 @ActiveProfiles("client")
 public class GitlabClientGroupsTest extends AbstractTest {
     
     @Autowired
-    private GitlabClientGroups gitLabGroupsApi;
+    private GitlabClientClient gitlabGroupsClient;
 
     @Autowired
     private RestTemplate restTemplate;
@@ -43,7 +43,7 @@ public class GitlabClientGroupsTest extends AbstractTest {
                   .andRespond(withSuccess(mockResponse, MediaType.APPLICATION_JSON));
 
         // Act
-        List<Group> groups = gitLabGroupsApi.getGroups();
+        List<Group> groups = gitlabGroupsClient.getGroups();
 
         // Assert
         softly.assertThat(groups).isNotNull();
@@ -70,7 +70,7 @@ public class GitlabClientGroupsTest extends AbstractTest {
                     .andRespond(withSuccess(mockResponse, MediaType.APPLICATION_JSON));
 
         // Act
-        gitLabGroupsApi.getGroups();
+        gitlabGroupsClient.getGroups();
 
         // Assert
         mockServer.verify();
