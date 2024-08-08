@@ -1,7 +1,8 @@
 package com.example.gitlabproxy.service;
 
 import com.example.gitlabproxy.api.model.GroupsWrapper;
-import com.example.gitlabproxy.client.GitlabClient;
+import com.example.gitlabproxy.client.GitlabGroupsClient;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -11,7 +12,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class GroupsService {
 
-    private final GitlabClient gitlabClient;
+    private final GitlabGroupsClient gitlabGroupsClient;
 
     /**
      * Get groups from Gitlab optionally filtered by a string and optionally refreshed
@@ -22,7 +23,7 @@ public class GroupsService {
      */
     public GroupsWrapper getGroups(String filter, boolean refresh) {
         return GroupsWrapper.builder()
-            .groups(gitlabClient.getGroups(refresh).stream()
+            .groups(gitlabGroupsClient.getGroups(refresh).stream()
             .filter(group -> filter == null || group.getFullPath().contains(filter))
             .map(group -> GroupsWrapper.Group.builder()
                     .id(group.getId())

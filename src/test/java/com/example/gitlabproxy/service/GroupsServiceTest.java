@@ -3,7 +3,8 @@ package com.example.gitlabproxy.service;
 import com.example.gitlabproxy.AbstractTest;
 import com.example.gitlabproxy.client.GitlabGroupsClient.Group;
 import com.example.gitlabproxy.api.model.GroupsWrapper;
-import com.example.gitlabproxy.client.GitlabClient;
+import com.example.gitlabproxy.client.GitlabGroupsClient;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,11 +24,11 @@ class GroupsServiceTest extends AbstractTest {
     private GroupsService groupsService;
 
     @MockBean
-    private GitlabClient gitlabClient;
+    private GitlabGroupsClient gitlabGroupsClient;
 
     @AfterEach
     private void afterEach() {
-        verifyNoMoreInteractions(gitlabClient);
+        verifyNoMoreInteractions(gitlabGroupsClient);
     }
 
     @Test
@@ -37,7 +38,7 @@ class GroupsServiceTest extends AbstractTest {
             Group.builder().id(1).name("Test Group").path("test-group").fullPath("path/test-group").build(),
             Group.builder().id(2).name("Another Group").path("another-group").fullPath("path/another-group").build()
         );
-        when(gitlabClient.getGroups(false)).thenReturn(groups);
+        when(gitlabGroupsClient.getGroups(false)).thenReturn(groups);
 
         // Act
         GroupsWrapper groupsWrapper = groupsService.getGroups(null, false);
@@ -59,7 +60,7 @@ class GroupsServiceTest extends AbstractTest {
         softly.assertThat(group2.getPath()).isEqualTo("another-group");
         softly.assertThat(group2.getFullPath()).isEqualTo("path/another-group");
 
-        verify(gitlabClient).getGroups(false);
+        verify(gitlabGroupsClient).getGroups(false);
     }
 
     @Test
@@ -69,7 +70,7 @@ class GroupsServiceTest extends AbstractTest {
             Group.builder().id(1).name("Test Group").path("test-group").fullPath("path/test-group").build(),
             Group.builder().id(2).name("Another Group").path("another-group").fullPath("path/another-group").build()
         );
-        when(gitlabClient.getGroups(false)).thenReturn(groups);
+        when(gitlabGroupsClient.getGroups(false)).thenReturn(groups);
 
         // Act
         GroupsWrapper groupsWrapper = groupsService.getGroups("test", false);
@@ -85,6 +86,6 @@ class GroupsServiceTest extends AbstractTest {
         softly.assertThat(group.getPath()).isEqualTo("test-group");
         softly.assertThat(group.getFullPath()).isEqualTo("path/test-group");
 
-        verify(gitlabClient).getGroups(false);
+        verify(gitlabGroupsClient).getGroups(false);
     }
 }
