@@ -51,7 +51,8 @@ public class GitlabGroupsClientTest extends AbstractTest {
     @Test
     void testDeserialization() throws IOException {
         // Arrange
-        String mockResponse = "[{\"id\": 1, \"name\": \"Test Group\", \"path\": \"test-group\", \"full_path\": \"path/test-group\"}]";
+        String mockResponse = "[{\"id\": 1, \"name\": \"Test Group\", \"path\": \"test-group\", \"full_path\": \"path/test-group\"}, " +
+                      "{\"id\": 2, \"name\": \"Second Group\", \"path\": \"second-group\", \"full_path\": \"path/second-group\"}]";
         mockServer.expect(requestTo("https://gitlab.com/api/v4/groups?per_page=100&pagination=keyset&order_by=name"))
                   .andRespond(withSuccess(mockResponse, MediaType.APPLICATION_JSON));
 
@@ -60,13 +61,19 @@ public class GitlabGroupsClientTest extends AbstractTest {
 
         // Assert
         softly.assertThat(groups).isNotNull();
-        softly.assertThat(groups).hasSize(1);
+        softly.assertThat(groups).hasSize(2);
         Group group = groups.get(0);
         softly.assertThat(group).isNotNull();
         softly.assertThat(group.getId()).isEqualTo(1);
         softly.assertThat(group.getName()).isEqualTo("Test Group");
         softly.assertThat(group.getPath()).isEqualTo("test-group");
         softly.assertThat(group.getFullPath()).isEqualTo("path/test-group");
+        group = groups.get(1);
+        softly.assertThat(group).isNotNull();
+        softly.assertThat(group.getId()).isEqualTo(2);
+        softly.assertThat(group.getName()).isEqualTo("Second Group");
+        softly.assertThat(group.getPath()).isEqualTo("second-group");
+        softly.assertThat(group.getFullPath()).isEqualTo("path/second-group");
     }
 
     @Test
