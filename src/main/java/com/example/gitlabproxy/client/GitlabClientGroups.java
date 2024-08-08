@@ -15,7 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
-import com.example.gitlabproxy.config.GitlabConfig.ClientConfig;
+import com.example.gitlabproxy.config.AppConfig.Client;
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.reflect.TypeToken;
@@ -33,7 +33,7 @@ import lombok.With;
 @RequiredArgsConstructor
 public class GitlabClientGroups {
 	
-	private final ClientConfig.Config config;
+	private final Client.Config config;
 
 	private final RestTemplate restTemplate;
 	private final Gson gson = new Gson();

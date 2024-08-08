@@ -14,11 +14,11 @@ import lombok.RequiredArgsConstructor;
 
 @Configuration
 @EnableCaching
-public class GitlabConfig {
+public class AppConfig {
     
     @Profile("client")
-    @EnableConfigurationProperties(ClientConfig.Config.class)
-    public static class ClientConfig {
+    @EnableConfigurationProperties(Client.Config.class)
+    public static class Client {
 
         @ConstructorBinding
         @ConfigurationProperties(prefix = "gitlab.api")
