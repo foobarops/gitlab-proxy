@@ -7,15 +7,15 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.web.client.RestTemplate;
 
-import com.example.gitlabproxy.api.GitLabGroupsApi;
+import com.example.gitlabproxy.client.GitlabClientGroups;
 
 @Configuration
 @EnableCaching
 public class GitlabConfig {
     
-    @Profile("default")
-    @EnableConfigurationProperties(GitLabGroupsApi.Config.class)
-    public static class DefaultConfig {}
+    @Profile("client")
+    @EnableConfigurationProperties(GitlabClientGroups.Config.class)
+    public static class ClientConfig {}
 
     @Bean
     public RestTemplate restTemplate() {

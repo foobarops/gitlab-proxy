@@ -11,8 +11,7 @@ import org.springframework.cache.CacheManager;
 import org.springframework.test.context.ActiveProfiles;
 
 import com.example.gitlabproxy.AbstractTest;
-import com.example.gitlabproxy.api.GitLabGroupsApi;
-import com.example.gitlabproxy.api.GitLabGroupsApi.Group;
+import com.example.gitlabproxy.client.GitlabClientGroups.Group;
 
 import java.io.IOException;
 import java.util.List;
@@ -37,7 +36,7 @@ import static org.mockito.Mockito.*;
 class GitlabClientTest extends AbstractTest {
 
     @MockBean
-    private GitLabGroupsApi gitLabGroupsApi;
+    private GitlabClientGroups gitLabGroupsApi;
 
     @Autowired
     private GitlabClient gitlabClient;

@@ -4,8 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.stereotype.Component;
-import com.example.gitlabproxy.api.GitLabGroupsApi;
-import com.example.gitlabproxy.api.GitLabGroupsApi.Group;
+import com.example.gitlabproxy.client.GitlabClientGroups.Group;
 
 import java.util.List;
 
@@ -13,7 +12,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class GitlabClient {
     
-    private final GitLabGroupsApi gitLabGroupsApi;
+    private final GitlabClientGroups gitLabGroupsApi;
 
     /**
      * This method is used to get the groups from the cache. Optionally, it can refresh the cache.

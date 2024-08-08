@@ -15,7 +15,7 @@ import org.springframework.test.context.ActiveProfiles;
 @ActiveProfiles("test")
 @SpringBootTest
 @MockBeans({
-    @MockBean(com.example.gitlabproxy.api.GitLabGroupsApi.class),
+    @MockBean(com.example.gitlabproxy.client.GitlabClientGroups.class),
 })
 class GitlabProxyApplicationTests extends AbstractTest {
 

@@ -1,8 +1,9 @@
-package com.example.gitlabproxy.api;
+package com.example.gitlabproxy.client;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.web.client.RestTemplate;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
@@ -15,13 +16,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.example.gitlabproxy.AbstractTest;
-import com.example.gitlabproxy.api.GitLabGroupsApi.Group;
+import com.example.gitlabproxy.client.GitlabClientGroups.Group;
 
 @SpringBootTest
-public class GitLabGroupsApiTest extends AbstractTest {
+@ActiveProfiles("client")
+public class GitlabClientGroupsTest extends AbstractTest {
     
     @Autowired
-    private GitLabGroupsApi gitLabGroupsApi;
+    private GitlabClientGroups gitLabGroupsApi;
 
     @Autowired
     private RestTemplate restTemplate;

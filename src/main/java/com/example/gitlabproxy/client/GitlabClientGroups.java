@@ -1,4 +1,4 @@
-package com.example.gitlabproxy.api;
+package com.example.gitlabproxy.client;
 
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
@@ -29,10 +29,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import lombok.With;
 
-@Profile("default")
+@Profile("client")
 @Component
 @RequiredArgsConstructor
-public class GitLabGroupsApi {
+public class GitlabClientGroups {
 	
 	@ConstructorBinding
 	@ConfigurationProperties(prefix = "gitlab.api")
