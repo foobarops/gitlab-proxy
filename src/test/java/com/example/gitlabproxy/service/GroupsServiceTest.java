@@ -1,7 +1,7 @@
 package com.example.gitlabproxy.service;
 
 import com.example.gitlabproxy.AbstractTest;
-import com.example.gitlabproxy.client.GitlabClientClient.Group;
+import com.example.gitlabproxy.client.GitlabGroupsClient.Group;
 import com.example.gitlabproxy.api.model.GroupsWrapper;
 import com.example.gitlabproxy.client.GitlabClient;
 import org.junit.jupiter.api.AfterEach;

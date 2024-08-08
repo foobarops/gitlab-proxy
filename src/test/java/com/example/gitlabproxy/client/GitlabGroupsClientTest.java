@@ -20,14 +20,14 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import com.example.gitlabproxy.AbstractTest;
-import com.example.gitlabproxy.client.GitlabClientClient.Group;
+import com.example.gitlabproxy.client.GitlabGroupsClient.Group;
 
 @SpringBootTest
 @ActiveProfiles("client")
 public class GitlabGroupsClientTest extends AbstractTest {
     
     @Autowired
-    private GitlabClientClient gitlabGroupsClient;
+    private GitlabGroupsClient gitlabGroupsClient;
 
     @Autowired
     private RestTemplate restTemplate;

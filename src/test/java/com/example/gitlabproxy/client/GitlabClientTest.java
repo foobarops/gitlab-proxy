@@ -9,7 +9,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 
 import com.example.gitlabproxy.AbstractTest;
-import com.example.gitlabproxy.client.GitlabClientClient.Group;
+import com.example.gitlabproxy.client.GitlabGroupsClient.Group;
 
 import java.io.IOException;
 import java.util.List;
@@ -34,7 +34,7 @@ import static org.mockito.Mockito.*;
 class GitlabClientTest extends AbstractTest {
 
     @MockBean
-    private GitlabClientClient gitlabGroupsClient;
+    private GitlabGroupsClient gitlabGroupsClient;
 
     @Autowired
     private GitlabClient gitlabClient;
