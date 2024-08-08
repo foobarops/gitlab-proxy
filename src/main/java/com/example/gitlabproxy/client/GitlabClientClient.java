@@ -7,6 +7,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -38,7 +40,9 @@ public class GitlabClientClient {
 	private final RestTemplate restTemplate;
 	private final Gson gson = new Gson();
 
-	public List<Group> getGroups() {
+	@Cacheable(value = "groupsCache", key = "#root.methodName")
+    @CachePut(value = "groupsCache", key = "#root.methodName", condition = "#refresh")
+	public List<Group> getGroups(boolean refresh) {
 		String url = config.getUrl() + "/groups?per_page=100&pagination=keyset&order_by=name";
 		List<Group> result = new ArrayList<>();
 		int cycles = 0;
