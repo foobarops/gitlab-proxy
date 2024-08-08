@@ -7,8 +7,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.context.properties.ConstructorBinding;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -17,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
+import com.example.gitlabproxy.config.GitlabConfig.ClientConfig;
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.reflect.TypeToken;
@@ -34,16 +33,7 @@ import lombok.With;
 @RequiredArgsConstructor
 public class GitlabClientGroups {
 	
-	@ConstructorBinding
-	@ConfigurationProperties(prefix = "gitlab.api")
-	@RequiredArgsConstructor
-	@Getter
-	public static class Config {
-		private final String url;
-		private final String privateToken;
-	}
-
-	private final Config config;
+	private final ClientConfig.Config config;
 
 	private final RestTemplate restTemplate;
 	private final Gson gson = new Gson();
