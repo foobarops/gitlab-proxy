@@ -46,7 +46,7 @@ public class GitlabGroupsClient {
 		String url = config.getUrl() + "/groups?per_page=100&pagination=keyset&order_by=name";
 		List<Group> result = new ArrayList<>();
 		int cycles = 0;
-		while (url != null && cycles++ < 2) {
+		while (url != null && config.shouldContinue(cycles++)) {
 			// Create headers
 			HttpHeaders headers = new HttpHeaders();
 			headers.set("Private-Token", config.getPrivateToken());

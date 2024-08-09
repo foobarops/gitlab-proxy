@@ -26,8 +26,21 @@ public class AppConfig {
         @Getter
         public static class Config {
         	private final String url;
+            private final int maxCycles;
         	private final String privateToken;
-        }}
+            /*
+             * Check if the client should continue making requests
+             * 
+             * Intended for integration tests
+             * Used to limit the number of requests made with keyset pagination
+             * @param cycle Current cycle starting at 0
+             * @return Whether to continue
+             */
+            public boolean shouldContinue(int cycle) {
+                return maxCycles == 0 || cycle < maxCycles;
+            }
+        }
+    }
 
     @Bean
     public RestTemplate restTemplate() {
