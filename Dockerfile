@@ -18,4 +18,4 @@ RUN addgroup -S gitlab-proxy && adduser -S gitlab-proxy -G gitlab-proxy
 USER gitlab-proxy:gitlab-proxy
 COPY --from=builder /app/gradle-wd/build/libs/app.jar /app/app.jar
 WORKDIR /app
-ENTRYPOINT ["java","-jar","app.jar"]
+ENTRYPOINT java $JAVA_OPTS -jar app.jar
