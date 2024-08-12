@@ -6,10 +6,20 @@ services:
       platforms:
         - linux/amd64
     image: gitlab-proxy
+    volumes:
+      - gitlab-cache:/ehcache
     ports:
       - "8080:8080"
     environment:
       - SPRING_PROFILES_ACTIVE=client
+      - JAVA_OPTS=--add-opens java.base/java.lang=ALL-UNNAMED
+        --add-opens java.base/java.util=ALL-UNNAMED
+        -Xmx600m -Xms100m
     platform: linux/amd64
     tty: true
     stdin_open: true
+    mem_limit: 700m  # Set Docker memory limit
+    # entrypoint: sh -c 'ls -l /ehcache/data'  # Debugging
+
+volumes:
+  gitlab-cache:

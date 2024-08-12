@@ -14,7 +14,9 @@ RUN gradle bootJar --offline --project-dir /app/gradle-wd --configuration-cache 
 
 # Stage 3: Create a minimal image to run the application
 FROM eclipse-temurin:21-jre-alpine AS final
-RUN addgroup -S gitlab-proxy && adduser -S gitlab-proxy -G gitlab-proxy
+RUN addgroup -S gitlab-proxy && adduser -S gitlab-proxy -G gitlab-proxy && \
+    mkdir /ehcache && chown gitlab-proxy:gitlab-proxy /ehcache
+VOLUME /ehcache
 USER gitlab-proxy:gitlab-proxy
 COPY --from=builder /app/gradle-wd/build/libs/app.jar /app/app.jar
 WORKDIR /app

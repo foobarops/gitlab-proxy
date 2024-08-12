@@ -5,6 +5,7 @@
   <service>
     <jsr107:defaults enable-statistics="true"/>
   </service>
+  <persistence directory="/ehcache/data"/>
   <cache alias="groupsCache">
     <key-type>java.lang.String</key-type>
     <value-type>java.util.List</value-type>
@@ -24,7 +25,8 @@
       </listener>
     </listeners> -->
     <resources>
-      <offheap unit="MB">100</offheap>
+      <heap unit="MB">300</heap>
+      <disk unit="MB" persistent="true">1000</disk>
     </resources>
   </cache>
 </config>
