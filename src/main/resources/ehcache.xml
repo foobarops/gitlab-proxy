@@ -28,5 +28,9 @@
       <heap unit="MB">300</heap>
       <disk unit="MB" persistent="true">1000</disk>
     </resources>
+    <heap-store-settings>
+      <max-object-graph-size>2000000000</max-object-graph-size>
+      <max-object-size>300000000</max-object-size>
+    </heap-store-settings>
   </cache>
 </config>
