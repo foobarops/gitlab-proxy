@@ -28,13 +28,13 @@
 				"shd101wyy.markdown-preview-enhanced",
 			]
 		}
-	}
+	},
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	// "forwardPorts": [],
 
 	// Use 'postCreateCommand' to run commands after the container is created.
-	// "postCreateCommand": "java -version",
+	"postCreateCommand": "sudo mkdir -p /ehcache/data; sudo chown vscode: /ehcache/data",
 
 	// Configure tool-specific properties.
 	// "customizations": {},

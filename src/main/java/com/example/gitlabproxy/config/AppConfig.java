@@ -13,10 +13,10 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @Configuration
-@EnableCaching
 public class AppConfig {
     
     @Profile("client")
+    @EnableCaching
     @EnableConfigurationProperties(Client.Config.class)
     public static class Client {
 

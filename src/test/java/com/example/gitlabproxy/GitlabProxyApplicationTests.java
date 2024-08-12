@@ -12,7 +12,7 @@ import org.springframework.cache.CacheManager;
 import org.springframework.cache.jcache.JCacheCacheManager;
 import org.springframework.test.context.ActiveProfiles;
 
-@ActiveProfiles("test")
+@ActiveProfiles("client")
 @SpringBootTest
 @MockBeans({
     @MockBean(com.example.gitlabproxy.client.GitlabGroupsClient.class),
