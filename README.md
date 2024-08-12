@@ -58,7 +58,7 @@ See the section [Further improvements](#further-improvements) for more details.
 
 ## Build and run using docker-compose:
 ```bash
-docker compose up
+docker compose up --build
 ```
 ## Build and run using docker:
 
