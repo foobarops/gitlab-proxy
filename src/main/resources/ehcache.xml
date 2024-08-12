@@ -25,7 +25,8 @@
       </listener>
     </listeners> -->
     <resources>
-      <heap unit="MB">300</heap>
+      <heap unit="entries">1</heap>
+      <offheap unit="MB">300</offheap>
       <disk unit="MB" persistent="true">1000</disk>
     </resources>
     <heap-store-settings>
