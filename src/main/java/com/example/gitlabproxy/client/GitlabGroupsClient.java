@@ -5,6 +5,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.springframework.cache.annotation.CachePut;
@@ -64,7 +65,10 @@ public class GitlabGroupsClient {
 			url = response.getHeaders().getFirst("link");
 
 			// Parse the response
-			result.addAll(gson.fromJson(response.getBody(), new TypeToken<List<Group>>(){}.getType()));
+			Collection<? extends Group> nextPage = gson.fromJson(response.getBody(), new TypeToken<List<Group>>(){}.getType());
+			if (nextPage != null && !nextPage.isEmpty()) {
+				result.addAll(nextPage);
+			}
 		}
 		return result;
 	}
