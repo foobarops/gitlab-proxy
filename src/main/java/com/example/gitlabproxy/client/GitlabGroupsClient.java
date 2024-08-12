@@ -30,7 +30,9 @@ import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import lombok.With;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Profile("client")
 @Component
 @RequiredArgsConstructor
@@ -42,7 +44,7 @@ public class GitlabGroupsClient {
 	private final Gson gson = new Gson();
 
 	@Cacheable(value = "groupsCache", key = "#root.methodName")
-    @CachePut(value = "groupsCache", key = "#root.methodName", condition = "#refresh")
+	@CachePut(value = "groupsCache", key = "#root.methodName", condition = "#refresh")
 	public List<Group> getGroups(boolean refresh) {
 		String url = config.getUrl() + "/groups?per_page=100&pagination=keyset&order_by=name";
 		List<Group> result = new ArrayList<>();
@@ -68,6 +70,10 @@ public class GitlabGroupsClient {
 			Collection<? extends Group> nextPage = gson.fromJson(response.getBody(), new TypeToken<List<Group>>(){}.getType());
 			if (nextPage != null && !nextPage.isEmpty()) {
 				result.addAll(nextPage);
+				if (config.shouldLog(cycles)) {
+					log.info("Cycles done: " + cycles);
+					log.info("Path of last item: " + result.get(result.size() - 1).getFullPath());
+				}
 			}
 		}
 		return result;

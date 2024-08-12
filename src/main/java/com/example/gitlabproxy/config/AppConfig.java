@@ -27,6 +27,7 @@ public class AppConfig {
         public static class Config {
         	private final String url;
             private final int maxCycles;
+            private final int logCycles;
         	private final String privateToken;
             /*
              * Check if the client should continue making requests
@@ -38,6 +39,17 @@ public class AppConfig {
              */
             public boolean shouldContinue(int cycle) {
                 return maxCycles == 0 || cycle < maxCycles;
+            }
+            /*
+             * Check if the client should log the current cycle
+             * 
+             * Intended for integration tests
+             * Used to log the current cycle
+             * @param cycle Current cycle starting at 1
+             * @return Whether to log
+             */
+            public boolean shouldLog(int cycle) {
+                return logCycles > 0 && cycle % logCycles == 0;
             }
         }
     }
