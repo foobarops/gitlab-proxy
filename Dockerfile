@@ -10,13 +10,15 @@ FROM gradle:8.9.0-jdk21-alpine AS builder
 COPY --from=dependencies /home/gradle/.gradle /home/gradle/.gradle
 COPY . /app
 # Build the application
-RUN gradle bootJar --offline --project-dir /app/gradle-wd --configuration-cache --build-cache -a --no-daemon --info
+RUN cd /app/gradle-wd && \
+    mv /app/gradle-jar/* . && \
+    gradle bootJar --offline --configuration-cache --build-cache -a --no-daemon --info
 
 # Stage 3: Create a minimal image to run the application
 FROM eclipse-temurin:21-jre-alpine AS final
 RUN addgroup -S gitlab-proxy && adduser -S gitlab-proxy -G gitlab-proxy && \
     mkdir /ehcache && chown gitlab-proxy:gitlab-proxy /ehcache
-VOLUME /ehcache
+VOLUME /ehcache /app/resources
 USER gitlab-proxy:gitlab-proxy
 COPY --from=builder /app/gradle-wd/build/libs/app.jar /app/app.jar
 WORKDIR /app

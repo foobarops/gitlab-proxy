@@ -7,6 +7,12 @@ Dockerfile
 .dockerignore
 *.dockerfile
 
+### Resources ###
+/src/main/resources/
+
+### Test ###
+/src/test/
+
 ### Git and Co ###
 .git*
 

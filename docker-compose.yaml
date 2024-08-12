@@ -8,6 +8,7 @@ services:
     image: gitlab-proxy
     volumes:
       - gitlab-cache:/ehcache
+      - ./src/main/resources:/app/resources:ro
     ports:
       - "8080:8080"
     environment:
@@ -19,7 +20,7 @@ services:
     tty: true
     stdin_open: true
     mem_limit: 700m  # Set Docker memory limit
-    # entrypoint: sh -c 'ls -l /ehcache/data'  # Debugging
+    # entrypoint: sh -c 'unzip -d /app/target /app/app.jar; cat /app/target/META-INF/MANIFEST.MF; ls -l /app/resources'  # Debugging
 
 volumes:
   gitlab-cache:
