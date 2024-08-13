@@ -71,8 +71,7 @@ public class GitlabGroupsClient {
 			if (nextPage != null && !nextPage.isEmpty()) {
 				result.addAll(nextPage);
 				if (config.shouldLog(cycles)) {
-					log.debug(String.format("Cycles done: %04d. Path of last item: %s",
-						cycles, result.get(result.size() - 1).getFullPath()));
+					log.debug(String.format("Cycles done: %04d. Path of last item: %s. Next URL: %s", cycles, result.get(result.size() - 1).getFullPath(), url));
 				}
 			}
 		}
