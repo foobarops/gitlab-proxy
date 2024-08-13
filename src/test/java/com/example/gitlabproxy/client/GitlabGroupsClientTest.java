@@ -53,7 +53,7 @@ public class GitlabGroupsClientTest extends AbstractTest {
         // Arrange
         String mockResponse = "[{\"id\": 1, \"name\": \"Test Group\", \"path\": \"test-group\", \"full_path\": \"path/test-group\"}, " +
                       "{\"id\": 2, \"name\": \"Second Group\", \"path\": \"second-group\", \"full_path\": \"path/second-group\"}]";
-        mockServer.expect(requestTo("https://gitlab.com/api/v4/groups?per_page=100&pagination=keyset&order_by=name"))
+        mockServer.expect(requestTo("https://gitlab.com/api/v4/groups?per_page=100&cursor=&owned=false&page=1&pagination=keyset&sort=asc&statistics=false&with_custom_attributes=false&order_by=name"))
                   .andRespond(withSuccess(mockResponse, MediaType.APPLICATION_JSON));
 
         // Act
@@ -80,7 +80,7 @@ public class GitlabGroupsClientTest extends AbstractTest {
     void testDecodeURI() throws IOException {
         // Arrange
         String mockResponse = "[]";
-        mockServer.expect(requestTo("https://gitlab.com/api/v4/groups?per_page=100&pagination=keyset&order_by=name"))
+        mockServer.expect(requestTo("https://gitlab.com/api/v4/groups?per_page=100&cursor=&owned=false&page=1&pagination=keyset&sort=asc&statistics=false&with_custom_attributes=false&order_by=name"))
                   .andRespond(withSuccess(mockResponse, MediaType.APPLICATION_JSON).headers(
                       new org.springframework.http.HttpHeaders() {{
                           add("link", "<https://gitlab.com/api/v4/groups?per_page=100&pagination=keyset&order_by=name&cursor=2%3D>; rel=\"next\"");
@@ -112,7 +112,7 @@ public class GitlabGroupsClientTest extends AbstractTest {
     void cacheWorks() throws IOException {
         // Arrange
         String mockResponse = "[{\"id\": 1, \"name\": \"Test Group\", \"path\": \"test-group\", \"full_path\": \"path/test-group\"}]";
-        mockServer.expect(requestTo("https://gitlab.com/api/v4/groups?per_page=100&pagination=keyset&order_by=name"))
+        mockServer.expect(requestTo("https://gitlab.com/api/v4/groups?per_page=100&cursor=&owned=false&page=1&pagination=keyset&sort=asc&statistics=false&with_custom_attributes=false&order_by=name"))
                   .andRespond(withSuccess(mockResponse, MediaType.APPLICATION_JSON));
 
         // Act
@@ -136,7 +136,7 @@ public class GitlabGroupsClientTest extends AbstractTest {
     void cacheRefresh() throws IOException {
         // Arrange
         String mockResponse = "[{\"id\": 1, \"name\": \"Test Group\", \"path\": \"test-group\", \"full_path\": \"path/test-group\"}]";
-        mockServer.expect(ExpectedCount.times(2), requestTo("https://gitlab.com/api/v4/groups?per_page=100&pagination=keyset&order_by=name"))
+        mockServer.expect(ExpectedCount.times(2), requestTo("https://gitlab.com/api/v4/groups?per_page=100&cursor=&owned=false&page=1&pagination=keyset&sort=asc&statistics=false&with_custom_attributes=false&order_by=name"))
                   .andRespond(withSuccess(mockResponse, MediaType.APPLICATION_JSON));
 
         // Act

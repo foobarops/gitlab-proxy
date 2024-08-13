@@ -16,13 +16,15 @@ repositories {
 }
 
 dependencies {
-    api(libs.org.springframework.boot.spring.boot.starter.web)
+    implementation(libs.org.springframework.boot.spring.boot.starter.web)
     compileOnly(libs.org.projectlombok.lombok)
     annotationProcessor(libs.org.projectlombok.lombok)
-    api(libs.org.springframework.boot.spring.boot.starter.cache)
-    api(libs.org.ehcache.ehcache)
-    api(libs.javax.cache.cache.api)
-    api(libs.com.google.code.gson.gson)
+    implementation(libs.org.springframework.boot.spring.boot.starter.cache)
+    implementation(libs.org.ehcache.ehcache)
+    implementation(libs.javax.cache.cache.api)
+    implementation(libs.com.google.code.gson.gson)
+    implementation(libs.spring.retry)
+    implementation(libs.aspectjweaver)
     testImplementation(libs.org.springframework.boot.spring.boot.starter.test)
 }
 

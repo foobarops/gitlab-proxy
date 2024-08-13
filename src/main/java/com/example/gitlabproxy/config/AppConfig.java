@@ -7,6 +7,7 @@ import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+import org.springframework.retry.annotation.EnableRetry;
 import org.springframework.web.client.RestTemplate;
 
 import lombok.Getter;
@@ -17,6 +18,7 @@ public class AppConfig {
     
     @Profile("client")
     @EnableCaching
+    @EnableRetry
     @EnableConfigurationProperties(Client.Config.class)
     public static class Client {
 
@@ -29,6 +31,7 @@ public class AppConfig {
             private final int maxCycles;
             private final int logCycles;
         	private final String privateToken;
+            private final String cursor;
             /*
              * Check if the client should continue making requests
              * 
@@ -50,6 +53,15 @@ public class AppConfig {
              */
             public boolean shouldLog(int cycle) {
                 return logCycles > 0 && cycle % logCycles == 0;
+            }
+            /*
+             * Get the starting URL for the groups
+             * 
+             * If a cursor is provided, it will be appended to the URL. This is for testing purposes only
+             * @return The URL
+             */
+            public String getGroupUrl() {
+                return String.format("%s/groups?per_page=100&cursor=%s&owned=false&page=1&pagination=keyset&sort=asc&statistics=false&with_custom_attributes=false&order_by=name", url, cursor == null ? "" : cursor);
             }
         }
     }

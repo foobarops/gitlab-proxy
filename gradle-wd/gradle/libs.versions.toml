@@ -7,6 +7,8 @@ org-springframework-boot = "2.7.18"
 org-ehcache-ehcache = "3.10.6"
 javax-cache-cache-api = "1.1.1"
 com-google-code-gson-gson = "2.8.8"
+spring-retry = "2.0.7"
+aspectjweaver="1.9.22.1"
 
 [libraries]
 org-projectlombok-lombok = { module = "org.projectlombok:lombok", version.ref = "org-projectlombok-lombok" }
@@ -16,6 +18,8 @@ org-springframework-boot-spring-boot-starter-cache = { module = "org.springframe
 org-ehcache-ehcache = { module = "org.ehcache:ehcache", version.ref = "org-ehcache-ehcache" }
 javax-cache-cache-api = { module = "javax.cache:cache-api", version.ref = "javax-cache-cache-api" }
 com-google-code-gson-gson = { module = "com.google.code.gson:gson", version.ref = "com-google-code-gson-gson" }
+spring-retry = { module = "org.springframework.retry:spring-retry", version.ref = "spring-retry" }
+aspectjweaver = { module = "org.aspectj:aspectjweaver", version.ref = "aspectjweaver" }
 
 [plugins]
 spring-boot = { id = "org.springframework.boot", version.ref = "org-springframework-boot" }
