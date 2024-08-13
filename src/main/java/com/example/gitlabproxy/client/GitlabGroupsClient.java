@@ -62,10 +62,7 @@ public class GitlabGroupsClient {
 
 			// Make the request
 			ResponseEntity<String> response = restTemplate.exchange(decodedUrl, HttpMethod.GET, entity, String.class);
-
-			// Get the 'link' header from the response
-			url = response.getHeaders().getFirst("link");
-
+			
 			// Parse the response
 			Collection<? extends Group> nextPage = gson.fromJson(response.getBody(), new TypeToken<List<Group>>(){}.getType());
 			if (nextPage != null && !nextPage.isEmpty()) {
@@ -74,6 +71,9 @@ public class GitlabGroupsClient {
 					log.debug(String.format("Cycles done: %04d. Path of last item: %s. Next URL: %s", cycles, result.get(result.size() - 1).getFullPath(), url));
 				}
 			}
+
+			// Get the 'link' header from the response
+			url = response.getHeaders().getFirst("link");
 		}
 		return result;
 	}
