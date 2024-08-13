@@ -10,3 +10,9 @@ spring:
     cache:
         jcache:
             config: classpath:ehcache.xml
+
+logging:
+    level:
+        root: INFO
+        org:
+            ehcache: DEBUG
