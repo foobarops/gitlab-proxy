@@ -1,0 +1,12 @@
+gitlab:
+    api:
+        url: https://gitlab.com/api/v4
+    # api.max-cycles: 10 # maximum number of cycles, 0 or omit to infinity, debug only
+    # api.log-cycles: 1 # log every Nth cycle, starting from 1, 0 or omit to disable, debug only
+    groups:
+        # cursor: # cursor for pagination, debug only
+
+spring:
+    cache:
+        jcache:
+            config: classpath:ehcache.xml
