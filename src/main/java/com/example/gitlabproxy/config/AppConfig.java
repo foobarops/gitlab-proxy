@@ -19,7 +19,7 @@ public class AppConfig {
     @Profile("client")
     @EnableCaching
     @EnableRetry
-    @EnableConfigurationProperties(Client.Config.class)
+    @EnableConfigurationProperties({Client.Config.class, Client.Config.Groups.class})
     public static class Client {
 
         @ConstructorBinding
@@ -31,7 +31,6 @@ public class AppConfig {
             private final int maxCycles;
             private final int logCycles;
         	private final String privateToken;
-            private final String cursor;
             /*
              * Check if the client should continue making requests
              * 
@@ -54,14 +53,20 @@ public class AppConfig {
             public boolean shouldLog(int cycle) {
                 return logCycles > 0 && cycle % logCycles == 0;
             }
-            /*
-             * Get the starting URL for the groups
-             * 
-             * If a cursor is provided, it will be appended to the URL. This is for testing purposes only
-             * @return The URL
-             */
-            public String getGroupUrl() {
-                return String.format("%s/groups?per_page=100&cursor=%s&owned=false&page=1&pagination=keyset&sort=asc&statistics=false&with_custom_attributes=false&order_by=name", url, cursor == null ? "" : cursor);
+            @ConstructorBinding
+            @ConfigurationProperties(prefix = "gitlab.api.groups")
+            @RequiredArgsConstructor
+            public static class Groups {
+                private final String cursor;
+                /*
+                 * Get the starting URL for the groups
+                 * 
+                 * If a cursor is provided, it will be appended to the URL. This is for testing purposes only
+                 * @return The URL
+                 */
+                public String getUrl() {
+                    return String.format("/groups?per_page=100&cursor=%s&owned=false&page=1&pagination=keyset&sort=asc&statistics=false&with_custom_attributes=false&order_by=name", cursor == null ? "" : cursor);
+                }
             }
         }
     }

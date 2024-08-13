@@ -32,14 +32,15 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class GitlabGroupsClient {
 	
-	final Client.Config config;
+	private final Client.Config config;
+	private final Client.Config.Groups groupsConfig;
 
 	private final GitlabGroupsRetryableClient retryableClient;
 
 	@Cacheable(value = "groupsCache", key = "#root.methodName")
 	@CachePut(value = "groupsCache", key = "#root.methodName", condition = "#refresh")
 	public List<Group> getGroups(boolean refresh) {
-		String url = config.getGroupUrl();
+		String url = config.getUrl() + groupsConfig.getUrl();
 		List<Group> result = new ArrayList<>();
 		int cycle = 0;
 		while (url != null && config.shouldContinue(cycle++)) {
