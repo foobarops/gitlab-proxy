@@ -7,6 +7,30 @@ The main goal of this project is to provide quick responses to the client by cac
 Currently, the proxy has only one endpoint `/groups` that returns the list of groups from Gitlab API.
 Client layer is split into two parts: client and retriable client. The client is responsible for preparing the requests to Gitlab API and caching the responses. The retriable client is responsible for retrying the requests in case of errors. Retries are done using Spring Retry.
 
+# Next steps
+## Performance considerations
+Proxy gets a full list of groups from Gitlab API and caches the response. It uses keyset pagination to get the list because the number of groups is more than 50000 and offset based pagination is not supported by Gitlab API for larger lists.
+
+The whole cycle trough groups takes a long time. Approximate number of groups is above 600000. Given 1-2 sec per request of 100 groups results in several hours to get the full list.
+The entire list is not needed for most of the use cases. More often use case is to get the list of groups filtered by a specific keyword. Moreover it should be paginated.
+Currently, the proxy supports filtering by name. This is done by adding a query parameter to the request. But for this traversal of the entire list is needed, which results in O(n) time complexity.
+This can be optimized by adding of an index. The solution is to add treeset and store the group entries in the cache individually using the group name as the key. This way the search can be done in O(log(n)) time.
+## Modes of the proxy:
+### Normal
+Client will constantly cycle trough the groups in background and update the treeset. The treeset will be used for giving the filtered and paginated results to the client. When an entry goes obsolete, it will not show up in the results and after configured time it will be removed from the treeset by special listener of eviction events.
+In case of a refresh request, the direct request to Gitlab API will be made and the entries will be also updated.
+### Fallback
+If a server or ressource access error occurs while accessing Gitlab API, it means the temporary unavailability of the Gitlab API.
+In this case the proxy switches to a fallback mode. It will return the last known state of the cache. This is done to prevent the client from waiting for the response from Gitlab API.
+After specified time if the service is still unavailable, the proxy will switch to bulkhead mode. This time should not exceed the eviction time minus the time elapsed since the start of last successful full refresh.
+Refresh is not possible in this mode.
+Responsible should be notified about the error and an attempt to switch back to normal mode can be made automatically after a certain time period.
+### Bulkhead
+If a client error occurs, it means the client proxy sending an invalid request to the Gitlab API.
+In this case the proxy switches to a bulkhead mode. Proxy will pass the requests directly to Gitlab API.
+The full cache is not used in this mode. But single requests can be cached.
+Responsible should be notified about the error and the proxy can be switched back to normal mode manually.
+
 Docker images can be built using the Dockerfile or using gradle. The proxy can be run using docker-compose or using docker.
 
 The proxy can also be used to add more features like rate limiting, security, monitoring, etc.
@@ -15,6 +39,12 @@ See the section [Further improvements](#further-improvements) for more details.
 
 # Table of Contents
 - [Gitlab Proxy](#gitlab-proxy)
+- [Next steps](#next-steps)
+    - [Performance considerations](#performance-considerations)
+    - [Modes of the proxy:](#modes-of-the-proxy)
+        - [Normal](#normal)
+        - [Fallback](#fallback)
+        - [Bulkhead](#bulkhead)
 - [Table of Contents](#table-of-contents)
 - [Example of a target architecture](#example-of-a-target-architecture)
 - [Build and run the application](#build-and-run-the-application)
