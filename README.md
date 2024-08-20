@@ -5,6 +5,7 @@ This project is a simple proxy for Gitlab API. It is a Spring Boot application t
 The main goal of this project is to provide quick responses to the client by caching the responses from Gitlab API. Refreshing the cache can be done by using a `refresh` flag in the request.
 
 Currently, the proxy has only one endpoint `/groups` that returns the list of groups from Gitlab API.
+Client layer is split into two parts: client and retriable client. The client is responsible for preparing the requests to Gitlab API and caching the responses. The retriable client is responsible for retrying the requests in case of errors. Retries are done using Spring Retry.
 
 Docker images can be built using the Dockerfile or using gradle. The proxy can be run using docker-compose or using docker.
 
@@ -36,7 +37,7 @@ See the section [Further improvements](#further-improvements) for more details.
     - [Add more monitoring like metrics, alerts, etc](#add-more-monitoring-like-metrics-alerts-etc)
     - [Add more CI/CD like pipelines, deployments, etc](#add-more-cicd-like-pipelines-deployments-etc)
     - [Add more logging like structured logs, log aggregation, etc](#add-more-logging-like-structured-logs-log-aggregation-etc)
-    - [Add more error handling like retries, circuit breakers, etc](#add-more-error-handling-like-retries-circuit-breakers-etc)
+    - [Add more error handling like circuit breakers, rate limiters, etc](#add-more-error-handling-like-circuit-breakers-rate-limiters-etc)
     - [Add more performance improvements like async, batching, etc](#add-more-performance-improvements-like-async-batching-etc)
     - [Add more configurations like timeouts, retries, etc](#add-more-configurations-like-timeouts-retries-etc)
     - [Add more environments like dev, test, prod, etc](#add-more-environments-like-dev-test-prod-etc)
@@ -122,9 +123,9 @@ Structured logs is important because it makes it easier to search, filter, etc.
 Further this logs can be sent to a log aggregator like ELK, Splunk, etc.
 Errors can be aggregated using a tool like Sentry, Rollbar, etc.
 
-## Add more error handling like retries, circuit breakers, etc
+## Add more error handling like circuit breakers, rate limiters, etc
 It can be done using a tool like Resilience4j, Hystrix, etc.
-Resilience4j is a lightweight fault tolerance library inspired by Netflix Hystrix, but designed for functional programming. Resilience4j provides higher-order functions (decorators) to enhance any functional interface, lambda expression or method reference with a Circuit Breaker, Rate Limiter, Retry or Bulkhead. Bulkhead is a pattern used to prevent a single failing component from bringing down the entire system.
+Resilience4j is a lightweight fault tolerance library inspired by Netflix Hystrix, but designed for functional programming. Resilience4j provides higher-order functions (decorators) to enhance any functional interface, lambda expression or method reference with a Circuit Breaker, Rate Limiter or Bulkhead. Bulkhead is a pattern used to prevent a single failing component from bringing down the entire system.
 
 ## Add more performance improvements like async, batching, etc
 It can be done using a tool like Reactor, RxJava, etc.
