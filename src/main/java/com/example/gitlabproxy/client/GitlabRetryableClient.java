@@ -38,7 +38,7 @@ import lombok.extern.slf4j.Slf4j;
     listeners = "loggingRetryListener"
 )
 @RequiredArgsConstructor
-public class GitlabGroupsRetryableClient {
+public class GitlabRetryableClient {
 
     private final RestTemplate restTemplate;
     private final GitlabGroupsClient gitlabGroupsClient;
