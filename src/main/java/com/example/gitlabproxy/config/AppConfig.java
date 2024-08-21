@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.retry.annotation.EnableRetry;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.client.RestTemplate;
 
 import lombok.Getter;
@@ -18,6 +19,7 @@ public class AppConfig {
     
     @Profile("client")
     @EnableCaching
+    @EnableScheduling
     @EnableRetry
     @EnableConfigurationProperties({Client.Config.class, Client.Config.Groups.class})
     public static class Client {

@@ -1,20 +1,14 @@
 package com.example.gitlabproxy.client;
 
 import java.io.Serializable;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
+import java.util.TreeSet;
 
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Profile;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 
-import com.example.gitlabproxy.config.AppConfig.Client;
 import com.google.gson.annotations.SerializedName;
 
 import lombok.AllArgsConstructor;
@@ -32,39 +26,32 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class GitlabGroupsClient {
 	
-	private final Client.Config config;
-	private final Client.Config.Groups groupsConfig;
-
-	private final GitlabGroupsRetryableClient retryableClient;
-
-	@Cacheable(value = "groupsCache", key = "#root.methodName")
-	@CachePut(value = "groupsCache", key = "#root.methodName", condition = "#refresh")
-	public List<Group> getGroups(boolean refresh) {
-		String url = config.getUrl() + groupsConfig.getUrl();
-		List<Group> result = new ArrayList<>();
-		int cycle = 0;
-		while (url != null && config.shouldContinue(cycle++)) {
-			// Create headers
-			HttpHeaders headers = new HttpHeaders();
-			headers.set("Private-Token", config.getPrivateToken());
-
-			// Create entity with headers
-			HttpEntity<String> entity = new HttpEntity<>(headers);
-
-			// Decode the URI
-			String decodedUrl = decodeUri(url);
-
-			url = retryableClient.getGroups(decodedUrl, entity, result, cycle);
-		}
-		return result;
+	private final TreeSet<String> groups = new TreeSet<>();
+	private enum State { READY, FALLBACK, BULKHEAD };
+	private State state = State.BULKHEAD;
+	
+	public void setStateReady() {
+		state = State.READY;
 	}
 
-	private String decodeUri(String uri) {
-		try {
-			return URLDecoder.decode(uri.replaceFirst("^<", "").replaceFirst(">.*", ""), StandardCharsets.UTF_8.toString());
-		} catch (UnsupportedEncodingException e) {
-			throw new RuntimeException("Failed to decode URL", e);
+	@CachePut(value = "groupCache", key = "#group.fullPath")
+	public Group putGroup(Group group) {
+		groups.add(group.getFullPath());
+		return group;
+	}
+
+	@Cacheable(value = "groupCache", key = "#fullPath")
+	public Group getGroup(String fullPath) {
+		return null;
+	}
+
+	// TODO implement bulkhead mode
+	public Collection<String> getGroups(boolean refresh) {
+		if (state == State.BULKHEAD) {
+			log.error("Groups not yet initialized");
+			throw new IllegalStateException("Groups not yet initialized and bulhead mode not implemented");
 		}
+		return groups;
 	}
 
 	@Getter

@@ -6,9 +6,9 @@
     <jsr107:defaults enable-statistics="true"/>
   </service>
   <persistence directory="/ehcache/data"/>
-  <cache alias="groupsCache">
+  <cache alias="groupCache">
     <key-type>java.lang.String</key-type>
-    <value-type>java.util.List</value-type>
+    <value-type>com.example.gitlabproxy.client.GitlabGroupsClient$Group</value-type>
     <expiry>
       <ttl unit="seconds">10000</ttl>
     </expiry>

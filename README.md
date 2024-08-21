@@ -7,7 +7,6 @@ The main goal of this project is to provide quick responses to the client by cac
 Currently, the proxy has only one endpoint `/groups` that returns the list of groups from Gitlab API.
 Client layer is split into two parts: client and retriable client. The client is responsible for preparing the requests to Gitlab API and caching the responses. The retriable client is responsible for retrying the requests in case of errors. Retries are done using Spring Retry.
 
-# Next steps
 ## Performance considerations
 Proxy gets a full list of groups from Gitlab API and caches the response. It uses keyset pagination to get the list because the number of groups is more than 50000 and offset based pagination is not supported by Gitlab API for larger lists.
 
@@ -16,13 +15,14 @@ The entire list is not needed for most of the use cases. More often use case is 
 Currently, the proxy supports filtering by name. This is done by adding a query parameter to the request. But for this traversal of the entire list is needed, which results in O(n) time complexity.
 This can be optimized by adding of an index. The solution is to add treeset and store the group entries in the cache individually using the group name as the key. This way the search can be done in O(log(n)) time.
 ## Modes of the proxy:
-### Normal
+Proxy can work in three modes: normal, fallback, and bulkhead. It starts in bulkhead mode and switches to ready mode when the cache is fully populated.
+### Ready
 Client will constantly cycle trough the groups in background and update the treeset. The treeset will be used for giving the filtered and paginated results to the client. When an entry goes obsolete, it will not show up in the results and after configured time it will be removed from the treeset by special listener of eviction events.
 In case of a refresh request, the direct request to Gitlab API will be made and the entries will be also updated.
-### Fallback
+### Fallback (to be implemented)
 If an error occurs while accessing Gitlab API, proxy will return the last known state of the cache. After specified time if the service is still unavailable, the proxy will switch to bulkhead mode. This time should not exceed the eviction time minus the time elapsed since the start of last successful full refresh. Alternatively, evicted entries can be marked as stale and the proxy can continue to serve the stale data.
 Refresh is not possible in this mode.
-### Bulkhead
+### Bulkhead (to be implemented)
 If an error occurs while accessing Gitlab API and there is no previous successful full refresh, i.e. the cache is not fully populated, then the proxy switches to a bulkhead mode. In this mode proxy will pass the requests directly to Gitlab API, as this is the only way to get the full data.
 The full cache is not used in this mode. But single pages and filtered request caching can be added to improve the performance.
 In both fallback and bulkhead mode, the proxy will try to access Gitlab API in the background and switch back to normal mode when the service is available again.
