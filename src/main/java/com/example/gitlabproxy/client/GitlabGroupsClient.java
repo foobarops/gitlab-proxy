@@ -48,7 +48,6 @@ public class GitlabGroupsClient {
 	// TODO implement bulkhead mode
 	public Collection<String> getGroups(boolean refresh) {
 		if (state == State.BULKHEAD) {
-			log.error("Groups not yet initialized");
 			throw new IllegalStateException("Groups not yet initialized and bulkhead mode not implemented");
 		}
 		return groups;
