@@ -10,7 +10,7 @@
     <key-type>java.lang.String</key-type>
     <value-type>com.example.gitlabproxy.client.GitlabGroupsClient$Group</value-type>
     <expiry>
-      <ttl unit="seconds">10000</ttl>
+      <ttl unit="hours">12</ttl>
     </expiry>
     <!-- <listeners>
       <listener>
