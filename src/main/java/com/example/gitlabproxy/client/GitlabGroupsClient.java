@@ -36,12 +36,19 @@ public class GitlabGroupsClient {
 
 	public List<Group> getGroups(String filter, boolean refresh) {
 		if (state == State.BULKHEAD || refresh) {
-			gitlabRetryableClient.getGroups(filter, 100, 0);
+			log.debug("Bulkhead mode or refresh requested");
+			return gitlabRetryableClient.getGroups(filter, 100, 0);
 		}
 		
-		return gitlabGroupsCachingClient.getGroups().stream()
-			.filter(group -> filter == null || group.contains(filter))
+		return getFilteredGroups(filter).stream()
 			.map(fullPath -> gitlabGroupsCachingClient.getGroup(fullPath)).toList();
+	}
+
+	private List<String> getFilteredGroups(String filter) {
+		synchronized (gitlabGroupsCachingClient.getGroups()) {
+			return gitlabGroupsCachingClient.getGroups().stream()
+				.filter(group -> filter == null || group.contains(filter)).toList();
+		}
 	}
 
 	@Getter

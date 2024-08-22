@@ -2,16 +2,24 @@ package com.example.gitlabproxy.client;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.web.client.RestTemplate;
 
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
 
 import java.util.List;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -38,6 +46,10 @@ public class GitlabGroupsClientTest extends AbstractTest {
         mockServer = MockRestServiceServer.createServer(restTemplate);
     }
 
+    @AfterEach
+    void verifyMocks() {
+        mockServer.verify();
+    }
 
     @Test
     void testGetGroupsFiltered() {
@@ -46,7 +58,6 @@ public class GitlabGroupsClientTest extends AbstractTest {
         "{\"id\": 2, \"name\": \"Second Group\", \"path\": \"second-group\", \"full_path\": \"path/second-group\"}]";
         mockServer.expect(requestTo("https://gitlab.com/api/v4/groups?per_page=100&cursor=&owned=false&page=1&pagination=keyset&sort=asc&statistics=false&with_custom_attributes=false&order_by=name"))
                   .andRespond(withSuccess(mockResponse, MediaType.APPLICATION_JSON));
-
         // Act
         gitlabScheduledClient.refreshGroups();
         List<Group> groups = gitlabGroupsClient.getGroups("test", false);
@@ -60,5 +71,21 @@ public class GitlabGroupsClientTest extends AbstractTest {
         softly.assertThat(group.getName()).isEqualTo("Test Group");
         softly.assertThat(group.getPath()).isEqualTo("test-group");
         softly.assertThat(group.getFullPath()).isEqualTo("path/test-group");
+
+    }
+
+    /*
+     * Test case to verify that the bulkhead mode works correctly.
+     * 
+     * This test method performs the following steps:
+     * 1. Mock the GitLab API to return an empty list of groups.
+     * 2. Call getGroups on the GitlabClient in bulkhead mode.
+     * 3. Verify that the GitLab API is called only once.
+     */
+    @Test
+    void testGetGroupsInBulkheadMode() {
+        mockServer.expect(requestTo("https://gitlab.com/api/v4/groups?per_page=100&owned=false&page=0&sort=asc&statistics=false&with_custom_attributes=false&order_by=name&filter"))
+                  .andRespond(withSuccess("[]", MediaType.APPLICATION_JSON));
+        gitlabGroupsClient.getGroups(null, true);
     }
 }

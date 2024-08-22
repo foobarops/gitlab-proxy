@@ -1,5 +1,9 @@
 package com.example.gitlabproxy.client;
 
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.SortedSet;
 import java.util.TreeSet;
 
 import org.springframework.cache.annotation.CachePut;
@@ -20,11 +24,13 @@ import lombok.extern.slf4j.Slf4j;
 public class GitlabGroupsCachingClient {
 	
 	@Getter
-	private final TreeSet<String> groups = new TreeSet<>();
+	private final Set<String> groups = Collections.synchronizedSet(new HashSet<>());
 
 	@CachePut(value = "groupCache", key = "#group.fullPath")
 	public Group putGroup(Group group) {
-		groups.add(group.getFullPath());
+		synchronized (groups) {
+			groups.add(group.getFullPath());
+		}
 		return group;
 	}
 
