@@ -40,6 +40,6 @@ class GitlabProxyApplicationTests extends AbstractTest {
 
     @Test
     public void testGroupsCacheExists() {
-        softly.assertThat(cacheManager.getCache("groupsCache")).isNotNull();
+        softly.assertThat(cacheManager.getCache("groupCache")).isNotNull();
     }
 }

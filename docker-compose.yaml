@@ -12,7 +12,7 @@ services:
     ports:
       - "8080:8080"
     environment:
-      - SPRING_PROFILES_ACTIVE=client
+      - SPRING_PROFILES_ACTIVE=client,scheduled
       - JAVA_OPTS=--add-opens java.base/java.lang=ALL-UNNAMED
         --add-opens java.base/java.util=ALL-UNNAMED
         -Xmx600m -Xms100m

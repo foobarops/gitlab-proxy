@@ -25,6 +25,7 @@ dependencies {
     implementation(libs.com.google.code.gson.gson)
     implementation(libs.spring.retry)
     implementation(libs.aspectjweaver)
+    implementation(libs.org.apache.httpcomponents.httpclient)
     testImplementation(libs.org.springframework.boot.spring.boot.starter.test)
 }
 

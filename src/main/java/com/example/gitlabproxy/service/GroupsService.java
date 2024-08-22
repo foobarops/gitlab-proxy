@@ -23,9 +23,7 @@ public class GroupsService {
      */
     public GroupsWrapper getGroups(String filter, boolean refresh) {
         return GroupsWrapper.builder()
-            .groups(gitlabGroupsClient.getGroups(refresh).stream()
-            .filter(group -> filter == null || group.contains(filter))
-            .map(fullPath -> gitlabGroupsClient.getGroup(fullPath))
+            .groups(gitlabGroupsClient.getGroups(filter, refresh).stream()
             .map(group -> GroupsWrapper.Group.builder()
                     .id(group.getId())
                     .name(group.getName())

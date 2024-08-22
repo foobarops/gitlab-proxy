@@ -16,10 +16,13 @@ import lombok.RequiredArgsConstructor;
 
 @Configuration
 public class AppConfig {
-    
+
+    @Profile("scheduled")
+    @EnableScheduling
+    public static class Scheduled {}
+
     @Profile("client")
     @EnableCaching
-    @EnableScheduling
     @EnableRetry
     @EnableConfigurationProperties({Client.Config.class, Client.Config.Groups.class})
     public static class Client {
@@ -66,7 +69,7 @@ public class AppConfig {
                  * If a cursor is provided, it will be appended to the URL. This is for testing purposes only
                  * @return The URL
                  */
-                public String getUrl() {
+                public String getStartKeysetUrl() {
                     return String.format("/groups?per_page=100&cursor=%s&owned=false&page=1&pagination=keyset&sort=asc&statistics=false&with_custom_attributes=false&order_by=name", cursor == null ? "" : cursor);
                 }
             }

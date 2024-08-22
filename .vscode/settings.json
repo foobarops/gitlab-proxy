@@ -8,4 +8,5 @@
     "java.configuration.updateBuildConfiguration": "automatic",
     "java.debug.settings.hotCodeReplace": "manual",
     "java.debug.settings.showQualifiedNames": true,
+    "java.debug.settings.onBuildFailureProceed": true,
 }

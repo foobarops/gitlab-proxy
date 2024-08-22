@@ -1,13 +1,8 @@
 package com.example.gitlabproxy.client;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
 import java.util.concurrent.TimeUnit;
 
 import org.springframework.context.annotation.Profile;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
@@ -32,30 +27,17 @@ public class GitlabScheduledClient {
 	private final Client.Config.Groups groupsConfig;
     int fullRefreshCount = 0;
 
-	private String decodeUri(String uri) {
-		try {
-			return URLDecoder.decode(uri.replaceFirst("^<", "").replaceFirst(">.*", ""), StandardCharsets.UTF_8.toString());
-		} catch (UnsupportedEncodingException e) {
-			throw new RuntimeException("Failed to decode URL", e);
-		}
-	}
-
     @Scheduled(timeUnit = TimeUnit.HOURS, fixedRate = 6)
     public void refreshGroups() {
         log.info(fullRefreshCount++ + " - Refreshing groups");
-		String url = config.getUrl() + groupsConfig.getUrl();
+		String url = config.getUrl() + groupsConfig.getStartKeysetUrl();
 		int cycle = 0;
 		while (url != null && config.shouldContinue(cycle++)) {
-			// Create headers
-			HttpHeaders headers = new HttpHeaders();
-			headers.set("Private-Token", config.getPrivateToken());
-
-			// Create entity with headers
-			HttpEntity<String> entity = new HttpEntity<>(headers);
-
-			// Decode the URI
-			String decodedUrl = decodeUri(url);
-            url = gitlabGroupsRetryableClient.getNextPage(cycle, entity, decodedUrl);
+            log.debug(String.format("Cycle: %d. Getting groups from %s", cycle, url));
+			url = gitlabGroupsRetryableClient.getNextPage(url);
+            if (config.shouldLog(cycle)) {
+        		log.info(String.format("Cycles done: %04d. Next URL: %s", cycle, url));
+        	}
 		}
 		gitlabGroupsClient.setStateReady();;
 	}
