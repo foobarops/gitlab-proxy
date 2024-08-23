@@ -1,10 +1,11 @@
 gitlab:
     api:
         url: https://gitlab.com/api/v4
-    # api.max-cycles: 10 # maximum number of cycles, 0 or omit to infinity, debug only
-    api.log-cycles: 100 # log every Nth cycle, starting from 1, 0 or omit to disable, debug only
-    groups:
-        # cursor: # cursor for pagination, debug only
+        # max-cycles: 10 # maximum number of cycles, 0 or omit to infinity, debug only
+        # log-cycles: 100 # log every Nth cycle, starting from 1, 0 or omit to disable, debug only
+        groups:
+            # cursor: # cursor for pagination, debug only
+            # stub-max-groups: 500000 # maximum number of groups to generate, 0 or omit for default 50000
 
 spring:
     cache:

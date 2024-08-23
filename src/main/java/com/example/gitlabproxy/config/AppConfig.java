@@ -63,6 +63,16 @@ public class AppConfig {
             @RequiredArgsConstructor
             public static class Groups {
                 private final String cursor;
+                // for testing purposes only
+                private final int stubMaxGroups;
+                /*
+                 * Check if the client should continue generating groups
+                 * 
+                 * Intended for integration tests
+                 */
+                public boolean stubContinue(int i) {
+                    return stubMaxGroups == 0 && i < 50000 || i < stubMaxGroups;
+                }
                 /*
                  * Get the starting URL for the groups
                  * 

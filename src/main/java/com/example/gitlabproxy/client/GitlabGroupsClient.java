@@ -25,7 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 public class GitlabGroupsClient {
 	
 	private final GitlabGroupsCachingClient gitlabGroupsCachingClient;
-	private final GitlabRetryableClient gitlabRetryableClient;
+	private final IGitlabRetryableClient gitlabRetryableClient;
 
 	private enum State { READY, FALLBACK, BULKHEAD };
 	private State state = State.BULKHEAD;

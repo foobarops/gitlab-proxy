@@ -22,9 +22,10 @@ In case of a refresh request, the direct request to Gitlab API will be made and 
 ### Fallback (to be implemented)
 If an error occurs while accessing Gitlab API, proxy will return the last known state of the cache. After specified time if the service is still unavailable, the proxy will switch to bulkhead mode. This time should not exceed the eviction time minus the time elapsed since the start of last successful full refresh. Alternatively, evicted entries can be marked as stale and the proxy can continue to serve the stale data.
 Refresh is not possible in this mode.
-### Bulkhead (to be implemented)
+### Bulkhead
 If an error occurs while accessing Gitlab API and there is no previous successful full refresh, i.e. the cache is not fully populated, then the proxy switches to a bulkhead mode. In this mode proxy will pass the requests directly to Gitlab API, as this is the only way to get the full data.
 The full cache is not used in this mode. But single pages and filtered request caching can be added to improve the performance.
+
 In both fallback and bulkhead mode, the proxy will try to access Gitlab API in the background and switch back to normal mode when the service is available again.
 Responsible should be notified about the error.
 

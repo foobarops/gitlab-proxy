@@ -32,7 +32,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@Profile("client")
+@Profile("client & !test")
 @Component
 @Retryable(
     value = {
@@ -46,13 +46,14 @@ import lombok.extern.slf4j.Slf4j;
     listeners = "loggingRetryListener"
 )
 @RequiredArgsConstructor
-public class GitlabRetryableClient {
+public class GitlabRetryableClient implements IGitlabRetryableClient {
 
     private final RestTemplate restTemplate;
     private final GitlabGroupsCachingClient gitlabGroupsCachingClient;
     private final Gson gson;
     private final Client.Config config;
 
+    @Override
     public String getNextPage(String url) {
         // Create headers
         HttpHeaders headers = new HttpHeaders();
@@ -72,6 +73,7 @@ public class GitlabRetryableClient {
         return decodeLink(response.getHeaders().getFirst("link"));
     }
 
+    @Override
     public List<Group> getGroups(String filter, int size, int page) {
         // Create headers
         HttpHeaders headers = new HttpHeaders();

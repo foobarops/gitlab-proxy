@@ -21,7 +21,7 @@ public class GitlabScheduledClient {
 
     final RestTemplate restTemplate;
     final GitlabGroupsClient gitlabGroupsClient;
-    private final GitlabRetryableClient gitlabGroupsRetryableClient;
+    private final IGitlabRetryableClient gitlabGroupsRetryableClient;
     final Gson gson;
     final Client.Config config;
 	private final Client.Config.Groups groupsConfig;
