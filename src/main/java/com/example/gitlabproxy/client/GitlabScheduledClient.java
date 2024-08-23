@@ -39,7 +39,8 @@ public class GitlabScheduledClient {
         		log.info(String.format("Cycles done: %04d. Next URL: %s", cycle, url));
         	}
 		}
-		gitlabGroupsClient.setStateReady();;
+        log.info("Groups refreshed.");
+		gitlabGroupsClient.setStateReady();
 	}
 
 }

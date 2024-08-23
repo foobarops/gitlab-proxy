@@ -32,6 +32,7 @@ public class GitlabGroupsClient {
 	
 	public void setStateReady() {
 		state = State.READY;
+		log.info("State changed to READY");
 	}
 
 	public List<Group> getGroups(String filter, boolean refresh) {
@@ -41,7 +42,9 @@ public class GitlabGroupsClient {
 		}
 		
 		return getFilteredGroups(filter).stream()
-			.map(fullPath -> gitlabGroupsCachingClient.getGroup(fullPath)).toList();
+			.map(fullPath -> gitlabGroupsCachingClient.getGroup(fullPath))
+			.filter(group -> group != null)
+			.toList();
 	}
 
 	private List<String> getFilteredGroups(String filter) {

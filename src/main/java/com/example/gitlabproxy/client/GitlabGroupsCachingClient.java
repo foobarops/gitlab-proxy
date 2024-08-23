@@ -34,7 +34,7 @@ public class GitlabGroupsCachingClient {
 		return group;
 	}
 
-	@Cacheable(value = "groupCache", key = "#fullPath")
+	@Cacheable(value = "groupCache", key = "#fullPath", unless = "#result == null")
 	public Group getGroup(String fullPath) {
 		return null;
 	}

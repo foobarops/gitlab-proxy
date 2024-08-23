@@ -184,3 +184,6 @@ Pagination can be used to limit the number of groups returned by the proxy. For 
 Sorting can be used to sort the groups returned by the proxy. For example, the proxy can sort the groups by name, by id, etc. It can be done using a tool like Sort, etc.
 ### Add filtering
 Filtering can be used to filter the groups returned by the proxy. For example, the proxy can return only the groups that contain a specific word in the name, etc. It can be done using a tool like Specification, etc.
+
+# Links
+https://docs.gitlab.com/ee/api/groups.html
