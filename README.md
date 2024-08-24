@@ -85,9 +85,10 @@ See the section [Further improvements](#further-improvements) for more details.
 
 # Build and run the application
 
-## Build and run using docker-compose:
+## Run using docker-compose:
+It will be run from ghcr.io image.
 ```bash
-docker compose up --build
+docker compose up
 ```
 ## Build and run using docker:
 

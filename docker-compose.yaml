@@ -1,11 +1,6 @@
 services:
   gitlab-proxy:
-    build:
-      context: .
-      dockerfile: Dockerfile
-      platforms:
-        - linux/amd64
-    image: gitlab-proxy
+    image: ghcr.io/foobarops/gitlab-proxy
     volumes:
       - gitlab-cache:/ehcache
       # /app/resources is added to classpath in bootJar task config
