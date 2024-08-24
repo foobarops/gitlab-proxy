@@ -8,6 +8,7 @@ services:
     image: gitlab-proxy
     volumes:
       - gitlab-cache:/ehcache
+      # /app/resources is added to classpath in bootJar task config
       - ./src/main/resources:/app/resources:ro
     ports:
       - "8080:8080"
