@@ -24,6 +24,9 @@ Dockerfile
 
 ### ### further from .gitignore ###
 
+### Secrets ###
+*.env
+
 ### Gradle ###
 .gradle/
 /gradle-wd/bin/

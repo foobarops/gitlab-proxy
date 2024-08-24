@@ -1,3 +1,6 @@
+### Secrets ###
+.env
+
 ### Gradle ###
 .gradle/
 /gradle-wd/bin/

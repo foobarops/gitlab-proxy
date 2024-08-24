@@ -13,7 +13,7 @@ services:
     ports:
       - "8080:8080"
     environment:
-      - SPRING_PROFILES_ACTIVE=client,scheduled
+      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE}
       - JAVA_OPTS=--add-opens java.base/java.lang=ALL-UNNAMED
         --add-opens java.base/java.util=ALL-UNNAMED
         -Xmx600m -Xms100m
@@ -21,7 +21,8 @@ services:
     tty: true
     stdin_open: true
     mem_limit: 700m  # Set Docker memory limit
-    # entrypoint: sh -c 'unzip -d /app/target /app/app.jar; cat /app/target/META-INF/MANIFEST.MF; ls -l /app/resources'  # Debugging
+    # user: root
+    # entrypoint: sh -c 'unzip -d /app /app/app.jar; cat /app/META-INF/MANIFEST.MF; ls -l /app/resources'  # Debugging
 
 volumes:
   gitlab-cache:

@@ -16,6 +16,7 @@ on:
       - 'config/**'
       - 'docker-compose.yml'
       - '.gitignore'
+      - '*.env'
 
 jobs:
   build:
