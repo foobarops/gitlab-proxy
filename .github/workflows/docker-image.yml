@@ -9,7 +9,6 @@ on:
       - 'README.md'
       - 'NOTES.md'
       - 'docs/**'
-      - '.github/**'
       - 'src/test/**'
       - '.devcontainer/**'
       - '.vscode/**'
